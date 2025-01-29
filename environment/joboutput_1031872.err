@@ -1,0 +1,5 @@
+/var/spool/slurmd/job1031872/slurm_script: line 18: simulation/bin/activate: No such file or directory
+Traceback (most recent call last):
+  File "/dcs/22/u2200430/cs344/simulation/environment/main.py", line 2, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

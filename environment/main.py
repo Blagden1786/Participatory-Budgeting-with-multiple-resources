@@ -1,5 +1,4 @@
 from time import time
-import numpy as np
 import random as rand
 import sys
 
@@ -101,12 +100,8 @@ def batch_run(loc, seed):
     data = find_data(loc, False)
 
     t1 = time()
-    projects_vs_times(data, out_folder=f"{loc}/plots_batch")
-    projects_vs_exclusion(data, out_folder=f"{loc}/plots_batch")
-    ejr_plus_conversion_violations(data, f"{loc}/plots_batch", False)
-    ejr_plus_alldim_violations(data, f"{loc}/plots_batch", False)
-    ejr_plus_conversion_violations(data, f"{loc}/plots_batch", True)
-    ejr_plus_alldim_violations(data, f"{loc}/plots_batch", True)
+    ejr_plus_alldim_violations(data, f"{loc}/plots_batch", False, False)
+    ejr_plus_alldim_violations(data, f"{loc}/plots_batch", True, False)
     t2 = time()
 
     print("Done")
@@ -116,6 +111,6 @@ def batch_run(loc, seed):
 if __name__ == "__main__":
     loc = './environment'
     seed = 0
-    test = 'time'
+    test = ''
 
-    main(loc, seed, test)
+    batch_run(loc, seed)
