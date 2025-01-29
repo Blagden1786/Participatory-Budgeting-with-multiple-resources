@@ -1,0 +1,96 @@
+"""
+projects = [Mproject("Project 0", np.array([50,50])),Mproject("Project 1", np.array([25,30])),Mproject("Project 2", np.array([75,20])),Mproject("Project 3", np.array([50,80]))]
+
+instance = Minstance(projects, np.array([150,300]), name="test election")
+
+rand.seed(100)
+ballot = [pbe.get_random_approval_ballot(projects) for i in range(10)]
+profile = pbe.ApprovalProfile(ballot,instance)
+
+print(instance)
+print(profile)
+
+output = multi_method_equal_shares(instance, profile)
+print(f"Projects funded: {output}")
+seed = 263
+print(seed)
+rand.seed(seed)
+
+projects = [Mproject("1", np.array([160,80])), Mproject("2", np.array([20,100])), Mproject("3", np.array([150,30]))]
+inst = Minstance(projects, np.array([200,320]))
+
+profile = pbe.get_random_approval_profile(inst, 10)
+mes = multi_method_equal_shares(inst, profile)
+
+inst = Minstance(projects, np.array([200,320]))
+er = exchange_rates_2d(inst, profile, "count")
+
+print(f"MES output: {mes}")
+print(f"Exchange Rates output: {er}")
+"""
+"""
+Mprojects = [Mproject("Project 0", np.array([50])),Mproject("Project 1", np.array([25])),Mproject("Project 2", np.array([75])),Mproject("Project 3", np.array([50])),Mproject("Project 4", np.array([80]))]
+projects = [pbe.Project("Project 0", 50),pbe.Project("Project 1", 25),pbe.Project("Project 2",75),pbe.Project("Project 3", 50),pbe.Project("Project 4", 80)]
+
+Multi_instance = Minstance(Mprojects, np.array([150]), name="test election")
+instance = pbe.Instance(projects, 150)
+
+Mballot = [pbe.ApprovalBallot([Multi_instance.get_project('Project 0'), Multi_instance.get_project('Project 1'), Multi_instance.get_project("Project 4")]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 1'), Multi_instance.get_project('Project 3')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 3'), Multi_instance.get_project('Project 0')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 2'), Multi_instance.get_project('Project 1')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 0')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 3'), Multi_instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 1'), Multi_instance.get_project('Project 2'), Multi_instance.get_project('Project 3')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 4'), Multi_instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 4')]),
+          pbe.ApprovalBallot([Multi_instance.get_project('Project 0'), Multi_instance.get_project('Project 2'),Multi_instance.get_project('Project 4')])]
+
+ballot = [pbe.ApprovalBallot([instance.get_project('Project 0'), instance.get_project('Project 1'), instance.get_project("Project 4")]),
+          pbe.ApprovalBallot([instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([instance.get_project('Project 1'), instance.get_project('Project 3')]),
+          pbe.ApprovalBallot([instance.get_project('Project 3'), instance.get_project('Project 0')]),
+          pbe.ApprovalBallot([instance.get_project('Project 2'), instance.get_project('Project 1')]),
+          pbe.ApprovalBallot([instance.get_project('Project 0')]),
+          pbe.ApprovalBallot([instance.get_project('Project 3'), instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([instance.get_project('Project 1'), instance.get_project('Project 2'), instance.get_project('Project 3')]),
+          pbe.ApprovalBallot([instance.get_project('Project 4'), instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([instance.get_project('Project 4')]),
+          pbe.ApprovalBallot([instance.get_project('Project 0'), instance.get_project('Project 2'),instance.get_project('Project 4')])]
+
+
+#profile = pbe.ApprovalProfile(ballot,instance)
+#Mprofile = pbe.ApprovalProfile(Mballot,Multi_instance)
+"""
+
+
+'''
+
+
+projects = [Mproject("Project 0", np.array([50])),Mproject("Project 1", np.array([25])),Mproject("Project 2", np.array([75])),Mproject("Project 3", np.array([50])),Mproject("Project 4", np.array([80]))]
+
+instance = Minstance(projects, np.array([150]), name="test election")
+
+ballot = [pbe.ApprovalBallot([instance.get_project('Project 0'), instance.get_project('Project 1'), instance.get_project("Project 4")]),
+          pbe.ApprovalBallot([instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([instance.get_project('Project 1'), instance.get_project('Project 3')]),
+          pbe.ApprovalBallot([instance.get_project('Project 3'), instance.get_project('Project 0')]),
+          pbe.ApprovalBallot([instance.get_project('Project 2'), instance.get_project('Project 1')]),
+          pbe.ApprovalBallot([instance.get_project('Project 0')]),
+          pbe.ApprovalBallot([instance.get_project('Project 3'), instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([instance.get_project('Project 1'), instance.get_project('Project 2'), instance.get_project('Project 3')]),
+          pbe.ApprovalBallot([instance.get_project('Project 4'), instance.get_project('Project 2')]),
+          pbe.ApprovalBallot([instance.get_project('Project 4')]),
+          pbe.ApprovalBallot([instance.get_project('Project 0'), instance.get_project('Project 2'),instance.get_project('Project 4')])]
+
+
+profile = pbe.ApprovalProfile(ballot,instance)
+
+y = multi_method_equal_shares(instance.copy(), profile.copy())
+
+print("Multi-MES:")
+print(y)
+print(f"Exclusion ratio: {exclusion_ratio(instance, profile, y)}")
+
+print(f"EJR+ violations {ejr_plus_conversion(instance, profile, y)}")
