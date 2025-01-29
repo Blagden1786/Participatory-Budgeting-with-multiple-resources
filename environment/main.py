@@ -114,7 +114,7 @@ def batch_run(loc, seed):
     print(f"See plots in {loc}/plots_batch")
 
 if __name__ == "__main__":
-    loc = '/dcs/22/u2200430/cs344/CS344-Extensions-of-PB-dissertation-main/Simulation'
+    loc = './environment/'
     seed = 0
     test = 'time'
 
