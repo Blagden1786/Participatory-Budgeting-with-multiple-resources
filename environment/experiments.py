@@ -368,6 +368,106 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
     if show:
         plt.show()
 
+def resources_vs_time(data, out_folder,project_number = 8, print_instance=True, show=False):
+    mmes_times = dict([(i,[]) for i in range(1,11)])
+    greedy_times = dict([(i,[]) for i in range(1,11)])
+
+    counter = 0
+
+    for path in data:
+        counter += 1
+        instance, profile = parse(path, 1)
+
+
+        num_projects = len(instance)
+        if num_projects == project_number:
+            if print_instance:
+                print("-----------------------------------")
+                print(path)
+                print(f"Projects {num_projects}")
+                print(f"Votes: {len(profile)}")
+                print(f"Instance {counter} of {len(data)}")
+                print("-----------------------------------")
+
+            for i in range(1,11):
+                # For each number of resources, test both multi-mes and greedy
+                instance, profile = parse(path, i)
+                t1 = time()
+                mmes = multi_method_equal_shares(instance.copy(), profile.copy())
+                t2 = time()
+
+                t3 = time()
+                greedy = greedy_rule(instance.copy(), profile.copy())
+                t4 = time()
+
+                mmes_times[i].append(t2-t1)
+                greedy_times[i].append(t4-t3)
+
+
+    mmes_y_values = [np.mean(mmes_times[x]) for x in mmes_times.keys()]
+    greedy_y_values = [np.mean(greedy_times[x]) for x in greedy_times.keys()]
+
+    plt.figure(6)
+    plt.plot(mmes_times.keys(), mmes_y_values, c='r', label='Multi-Method Equal Shares')
+    plt.plot(greedy_times.keys(), greedy_y_values, c='g', label='Greedy Rule')
+
+    plt.xlabel("Number of Resources")
+    plt.ylabel("Time (s)")
+    plt.title(f"How the number of resources affects runtime ({project_number} projects per instance)")
+    plt.legend(loc='upper left')
+
+    plt.savefig(f"{out_folder}/resources_vs_time.png")
+    if show:
+        plt.show()
+
+def resources_vs_exclusion(data, out_folder,project_number = 8, print_instance=True, show=False):
+    mmes_exclusion = dict([(i,[]) for i in range(1,11)])
+    greedy_exclusion = dict([(i,[]) for i in range(1,11)])
+
+    counter = 0
+
+    for path in data:
+        counter += 1
+        instance, profile = parse(path, 1)
+
+
+        num_projects = len(instance)
+        if num_projects == project_number:
+            if print_instance:
+                print("-----------------------------------")
+                print(path)
+                print(f"Projects {num_projects}")
+                print(f"Votes: {len(profile)}")
+                print(f"Instance {counter} of {len(data)}")
+                print("-----------------------------------")
+
+            for i in range(1,11):
+                # For each number of resources, test both multi-mes and greedy
+                instance, profile = parse(path, i)
+
+                mmes = multi_method_equal_shares(instance.copy(), profile.copy())
+                greedy = greedy_rule(instance.copy(), profile.copy())
+
+                mmes_exclusion[i].append(exclusion_ratio(instance, profile, mmes))
+                greedy_exclusion[i].append(exclusion_ratio(instance, profile, greedy))
+
+
+    mmes_y_values = [np.mean(mmes_exclusion[x]) for x in mmes_exclusion.keys()]
+    greedy_y_values = [np.mean(greedy_exclusion[x]) for x in greedy_exclusion.keys()]
+
+    plt.figure(6)
+    plt.plot(mmes_exclusion.keys(), mmes_y_values, c='r', label='Multi-Method Equal Shares')
+    plt.plot(greedy_exclusion.keys(), greedy_y_values, c='g', label='Greedy Rule')
+
+    plt.xlabel("Number of Resources")
+    plt.ylabel("Exclusion Ration")
+    plt.title(f"How the number of resources affects exclusion ratio ({project_number} projects per instance)")
+    plt.legend(loc='upper left')
+
+    plt.savefig(f"{out_folder}/resources_vs_exclusion.png")
+    if show:
+        plt.show()
+
 def num_datsets_vs_projects(data):
     num_datasets = {'1-8': 0, '9-13': 0, '14-21': 0, '22-38': 0, '39+': 0}
     for path in data:
@@ -395,7 +495,6 @@ def num_datsets_vs_projects(data):
     plt.ylabel("Number of Datasets")
     plt.savefig("Simulation/plots/datasets_vs_projects.png")
     plt.show()
-
 
 # [  1.   8.  13.  21.  38. 163.]
 # Want the gaps to be 1-8, 9-13, 14-21, 22-38, 39+

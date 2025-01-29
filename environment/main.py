@@ -42,9 +42,15 @@ def main(loc, seed, test):
         case 'time':
             print("Time test")
             projects_vs_times(data, f"{loc}/plots", show=True)
+        case 'resource_time':
+            print("Resource Time test")
+            resources_vs_time(data, f"{loc}/plots", show=True)
         case 'exc':
             print("Exclusion test")
             projects_vs_exclusion(data, f"{loc}/plots", show=True)
+        case 'resource_exc':
+            print("Resource exclusion ratio test")
+            resources_vs_exclusion(data, f"{loc}/plots", show=True)
         case 'ejrc':
             print("EJR+ violations conversion test")
             ejr_plus_conversion_violations(data, f"{loc}/plots", False, show=True)
@@ -111,6 +117,6 @@ def batch_run(loc, seed):
 if __name__ == "__main__":
     loc = './environment'
     seed = 0
-    test = ''
+    test = 'resource_exc'
 
-    batch_run(loc, seed)
+    main(loc, seed, test)
