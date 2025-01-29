@@ -25,7 +25,7 @@ def rho_affordable(c:Mproject, voters:list[int], voter_budgets, aggregation) -> 
         tuple[float,list]: _description_
     """
 
-    rho = [np.Infinity for i in range(len(c.cost))]
+    rho = [np.inf for i in range(len(c.cost))]
 
     # Calculate rho value for each resource
     for r in range(len(c.cost)):
@@ -51,7 +51,7 @@ def rho_affordable(c:Mproject, voters:list[int], voter_budgets, aggregation) -> 
         # If one of the values is infinity, that means the project cannot be funded along that dimension.
         # Hence the aggregated rho value should be infinity
         aggregated_rho = inf
-        if max(rho) < np.Inf:
+        if max(rho) < np.inf:
             aggregated_rho = aggregation(rho)
 
 
@@ -86,7 +86,7 @@ def rho_epsilon_converted_affordable(c:Mproject, inst:Minstance, voters, voter_b
 
     num_voters = len(voters)
     # Calculate Rho
-    rho = np.Infinity
+    rho = np.inf
 
     # Sort voters by increasing amount of remaining budget
     sorted_voters = sorted(voters, key= lambda x: converted_voter_budgets[x])
