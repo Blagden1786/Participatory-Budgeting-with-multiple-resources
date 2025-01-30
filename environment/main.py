@@ -119,4 +119,4 @@ if __name__ == "__main__":
     seed = 0
     test = 'resource_exc'
 
-    main(loc, seed, test)
+    batch_run(loc, seed)

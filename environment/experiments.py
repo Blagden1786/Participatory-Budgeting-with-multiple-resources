@@ -306,6 +306,7 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
         '39+': []
     }
 
+    f = open(f"{out_folder}/out.txt", "a")
     counter = 0
 
     for path in data:
@@ -321,6 +322,8 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
             print(f"Votes: {len(profile)}")
             print(f"Instance {counter} of {len(data)}")
             print("-----------------------------------")
+        
+        f.write(f"{path}\n")
 
         y = exchange_rates_2d(instance.copy(), profile.copy())
         er_violation = ejr_plus_restricted(instance, profile, y, up_to_one)
@@ -367,6 +370,8 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
         plt.savefig(f"{out_folder}/ejr_plus_min.png")
     if show:
         plt.show()
+    
+    f.close()
 
 def resources_vs_time(data, out_folder,project_number = 8, print_instance=True, show=False):
     mmes_times = dict([(i,[]) for i in range(1,11)])
