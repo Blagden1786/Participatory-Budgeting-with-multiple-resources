@@ -106,10 +106,11 @@ def batch_run(loc, seed):
     data = find_data(loc, False)
     path = data[150]
 
-    t1 = time()
-    instance, profile = parse(path, 2)
-    output = exchange_rates_2d(instance.copy(), profile.copy())
     
+    instance, profile = parse(path, 2)
+    print("Calculating greedy winner")
+    output = greedy_rule(instance.copy(), profile.copy())
+    t1 = time()
     ejr_plus_restricted(instance, profile, output)
     print(ejr_plus_restricted)
     #ejr_plus_alldim_violations(data, f"{loc}/plots_batch", True, False)
