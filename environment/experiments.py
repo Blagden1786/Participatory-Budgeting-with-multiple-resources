@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 """
 Parsing data functions
 """
-def get_data(loc, short=True):
+def get_data(loc):
     """Given the location, retrieve the list of paths of the data
 
     Args:
@@ -24,16 +24,8 @@ def get_data(loc, short=True):
     Returns:
         _type_: _description_
     """
-    test_projects_short = os.listdir(f"{loc}/datasets_under_30")
-    test_projects_short = [f"{loc}/datasets_under_30/{x}" for x in test_projects_short]
-
-    test_projects_extended = os.listdir(f"{loc}/datasets_extended")
-    test_projects_extended = [f"{loc}/datasets_extended/{x}" for x in test_projects_extended]
-
-    if short:
-        test_projects = test_projects_short # Change between a short run and an extended run
-    else:
-        test_projects = test_projects_extended
+    test_projects = os.listdir(loc)
+    test_projects = [f"{loc}/{x}" for x in test_projects]
 
     return test_projects
 

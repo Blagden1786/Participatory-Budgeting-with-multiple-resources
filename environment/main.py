@@ -48,14 +48,14 @@ def batch_run(loc, seed):
     rand.seed(seed)
 
     t1 = time()
-    #run_test_projects(runtime_test, './environment', './environment/plots', False)
-    #run_test_projects(exclusion_test, './environment', './environment/plots', False)
-    #run_test_projects(ejrplus_conversion_test, './environment', './environment/plots', False)
-    run_test_projects(ejrplusc_up_to_one, './environment', './environment/plots', True)
+    run_test_projects(runtime_test, './environment/datasets_under_30', './environment/plots', False)
+    run_test_projects(exclusion_test, './environment/datasets_under_30', './environment/plots', False)
+    run_test_projects(ejrplus_conversion_test, './environment/datasets_under_30', './environment/plots', False)
+    run_test_projects(ejrplusc_up_to_one, './environment/datasets_under_30', './environment/plots', False)
     t2 = time()
 
     print("Done")
-    print(f"Time taken: {(t2-t1)/60}")
+    print(f"Time taken: {(t2-t1)/60} minutes")
     print(f"See plots in {loc}/plots_batch")
 
 if __name__ == "__main__":
