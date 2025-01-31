@@ -49,15 +49,11 @@ def main(loc, seed, test):
 def batch_run(loc, seed):
     rand.seed(seed)
 
-    data = find_data('./environment')
-
-    ejr_plus_conversion_violations(data, './environment/plots', True, True, True)
-
     t1 = time()
     #run_test_projects(runtime_test, './environment/datasets_under_30', './environment/plots', False)
     #run_test_projects(exclusion_test, './environment/datasets_under_30', './environment/plots', False)
     #run_test_projects(ejrplus_conversion_test, './environment/datasets_under_30', './environment/plots', False)
-    #run_test_projects(ejrplusc_up_to_one, './environment/datasets_under_30', './environment/plots', False)
+    run_test_projects(ejrplusc_up_to_one, './environment/datasets_under_30', './environment/plots', True, True)
     t2 = time()
 
     print("Done")

@@ -45,8 +45,10 @@ def parse(path, num_resources=1, random_budget=False):
             for i in projects:
                 # Select a random number between 0 and 1. Split the cost between the two resources. (c*a,c*(1-a))
                 cost = float(projects[i]['cost'])
-                cost_split = np.random.dirichlet(np.ones(num_resources), size=1) # Generate some random numbers summing to one
-                project_list.append(Mproject(i,np.array([cost*x for x in cost_split[0]])))
+                #cost_split = np.random.dirichlet(np.ones(num_resources), size=1) # Generate some random numbers summing to one
+                #project_list.append(Mproject(i,np.array([cost*x for x in cost_split[0]])))
+                cost_split = np.random.uniform(0,1) # Generate some random numbers summing to one
+                project_list.append(Mproject(i,np.array([cost_split*cost, cost*(1-cost_split)])))
             instance = Minstance(project_list, budget_split, name=path)
 
     ballots = []
