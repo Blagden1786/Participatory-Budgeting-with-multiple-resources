@@ -81,7 +81,7 @@ def ejr_plus_restricted(inst:Minstance, profile:pbe.ApprovalProfile, outcome:Col
             inst (Minstance): The instance to check
             profile (pbe.ApprovalProfile): Approval profile
             outcome (Collection[Mproject]): The outcome to check
-            up_to_one (bool, optional): Whether to consider EJR+ up to one project or up to any. Defaults to True.
+            up_to_one (bool, optional): Whether to consider EJR+ up to one project or not. Defaults to True.
 
         Returns:
             int: Number of violations of this type.
@@ -89,12 +89,14 @@ def ejr_plus_restricted(inst:Minstance, profile:pbe.ApprovalProfile, outcome:Col
     failed_projects = [set() for _ in range(inst.budget_limit.size)]
 
     for i in range(inst.budget_limit.size):
+        print(f"Resource {i}")
         converted_inst, converted_profile = to_1d(inst, profile, i)
 
         converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
-
+        print("Now checking violations")
         _, failed = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
         failed_projects[i] = failed
+        print(f"Failures {failed}")
 
     # A project violates EJR+ MIN if it violates it in any dimension
     failures = set.union(*failed_projects)

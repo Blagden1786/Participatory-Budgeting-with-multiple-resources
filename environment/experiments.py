@@ -306,7 +306,6 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
         '39+': []
     }
 
-    f = open(f"{out_folder}/out.txt", "a")
     counter = 0
 
     for path in data:
@@ -315,39 +314,38 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
 
         num_projects = len(instance)
 
-        if print_instance:
-            print("-----------------------------------")
-            print(path)
-            print(f"Projects {num_projects}")
-            print(f"Votes: {len(profile)}")
-            print(f"Instance {counter} of {len(data)}")
-            print("-----------------------------------")
+        f = open(f"{out_folder}/out.txt", "a")
+        f.write("-----------------------------------\n")
+        f.write(path+'\n')
+        f.write(f"Projects {num_projects}\n")
+        f.write(f"Votes: {len(profile)}\n")
+        f.write(f"Instance {counter} of {len(data)}\n")
         
-        f.write(f"{path}\n")
+        
+        
+        t = time()
+        g = greedy_rule(instance.copy(), profile.copy())
+        f.write(f"Found output, doing pound violations {time()-t}\n")
+        instance_pound, profile_pound = to_1d(instance, profile, 0)
+        f.write(f"Restricted to pound, now checking violations {time() - t}\n")
+        _ , pound_violations = strong_ejr_plus_violations(instance_pound, profile_pound, [instance_pound.get_project(c.name) for c in g], Cost_Sat, up_to_one)
+        f.write(f"Pound done, moving onto dollar {time()-t}\n")
+        instance_dollar, profile_dollar = to_1d(instance, profile, 1)
+        f.write(f"Converted to dollar, now checking violations {time()-t}")
+        _ , dollar_violations = strong_ejr_plus_violations(instance_dollar, profile_dollar, [instance_dollar.get_project(c.name) for c in g], Cost_Sat, up_to_one)
 
-        y = exchange_rates_2d(instance.copy(), profile.copy())
-        er_violation = ejr_plus_restricted(instance, profile, y, up_to_one)
+        greedy_violations[data_split(num_projects)].append(len(set.union(pound_violations, dollar_violations)))
+        f.write(f"Instance complete {time()-t}\n")
+        f.write("-----------------------------------\n")
+        f.close()
 
-        y = multi_method_equal_shares(instance.copy(), profile.copy())
-        mmes_violation = ejr_plus_restricted(instance, profile, y, up_to_one)
-
-        y = greedy_rule(instance.copy(), profile.copy())
-        greedy_violation = ejr_plus_restricted(instance, profile, y, up_to_one)
-
-
-        er_violations[data_split(num_projects)].append(er_violation)
-        mmes_violations[data_split(num_projects)].append(mmes_violation)
-        greedy_violations[data_split(num_projects)].append(greedy_violation)
-
-    er_y_values = [np.mean(er_violations[x]) for x in er_violations.keys()]
-    mmes_y_values = [np.mean(mmes_violations[x]) for x in mmes_violations.keys()]
     greedy_y_values = [np.mean(greedy_violations[x]) for x in greedy_violations.keys()]
 
 
     if up_to_one:
         plt.figure(4)
-        plt.plot(er_violations.keys(),er_y_values, c='b', label='Exchange Rates')
-        plt.plot(mmes_violations.keys(), mmes_y_values, c='r', label='Multi-Method Equal Shares')
+        #plt.plot(er_violations.keys(),er_y_values, c='b', label='Exchange Rates')
+        #plt.plot(mmes_violations.keys(), mmes_y_values, c='r', label='Multi-Method Equal Shares')
         plt.plot(greedy_violations.keys(), greedy_y_values, c='g', label='Greedy Rule')
 
         plt.xlabel("Number of Projects")
@@ -358,8 +356,8 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
         plt.savefig(f"{out_folder}/ejr_plus_min_up_to_one.png")
     else:
         plt.figure(5)
-        plt.plot(er_violations.keys(),er_y_values, c='b', label='Exchange Rates')
-        plt.plot(mmes_violations.keys(), mmes_y_values, c='r', label='Multi-Method Equal Shares')
+        #plt.plot(er_violations.keys(),er_y_values, c='b', label='Exchange Rates')
+        #plt.plot(mmes_violations.keys(), mmes_y_values, c='r', label='Multi-Method Equal Shares')
         plt.plot(greedy_violations.keys(), greedy_y_values, c='g', label='Greedy Rule')
 
         plt.xlabel("Number of Projects")
@@ -370,8 +368,6 @@ def ejr_plus_alldim_violations(data, out_folder, up_to_one, print_instance=True,
         plt.savefig(f"{out_folder}/ejr_plus_min.png")
     if show:
         plt.show()
-    
-    f.close()
 
 def resources_vs_time(data, out_folder,project_number = 8, print_instance=True, show=False):
     mmes_times = dict([(i,[]) for i in range(1,11)])

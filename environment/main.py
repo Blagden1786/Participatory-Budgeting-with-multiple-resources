@@ -104,10 +104,16 @@ def batch_run(loc, seed):
     rand.seed(seed)
 
     data = find_data(loc, False)
+    path = data[150]
 
     t1 = time()
-    ejr_plus_alldim_violations(data, f"{loc}/plots_batch", False, False)
-    ejr_plus_alldim_violations(data, f"{loc}/plots_batch", True, False)
+    instance, profile = parse(path, 2)
+    output = exchange_rates_2d(instance.copy(), profile.copy())
+    
+    ejr_plus_restricted(instance, profile, output)
+    print(ejr_plus_restricted)
+    #ejr_plus_alldim_violations(data, f"{loc}/plots_batch", True, False)
+    #ejr_plus_alldim_violations(data, f"{loc}/plots_batch", True, False)
     t2 = time()
 
     print("Done")
