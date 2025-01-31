@@ -50,10 +50,10 @@ def batch_run(loc, seed):
     rand.seed(seed)
 
     t1 = time()
-    #run_test_projects(runtime_test, './environment/datasets_under_30', './environment/plots', False)
-    #run_test_projects(exclusion_test, './environment/datasets_under_30', './environment/plots', False)
-    #run_test_projects(ejrplus_conversion_test, './environment/datasets_under_30', './environment/plots', False)
-    run_test_projects(ejrplusc_up_to_one, './environment/datasets_under_30', './environment/plots', True, True)
+    run_test_projects(runtime_test, './environment/datasets_under_30', './environment/plots_batch', False)
+    run_test_projects(exclusion_test, './environment/datasets_under_30', './environment/plots_batch', False)
+    #run_test_projects(ejrplus_conversion_test, './environment/datasets_under_30', './environment/plots_batch', False)
+    #run_test_projects(ejrplusc_up_to_one, './environment/datasets_under_30', './environment/plots_batch', False)
     t2 = time()
 
     print("Done")

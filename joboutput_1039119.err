@@ -1,2 +1,0 @@
-/var/spool/slurmd/job1039119/slurm_script: line 19: 20471 Killed                  python3.12 /dcs/22/u2200430/cs344/simulation/environment/main.py
-slurmstepd: error: Detected 1 oom-kill event(s) in StepId=1039119.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.

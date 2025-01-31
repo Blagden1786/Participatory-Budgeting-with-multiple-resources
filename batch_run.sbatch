@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-#SBATCH --job-name=PB_ejralldim # Job name for tracking
+#SBATCH --job-name=PB_ejrconv # Job name for tracking
 #SBATCH --partition=parrot  # Partition you wish to use (see above for list)
 #SBATCH --cpus-per-task=1      # Number of CPU threads used by your job, set this upto 40 as required.
 #SBATCH --mem-per-cpu=20000   # RAM in MB needed per core (i.e. 1500MB * 40 threads = 60GB RAM)
