@@ -2,6 +2,7 @@ from time import time
 import random as rand
 import sys
 
+from matplotlib.pyplot import plot
 import pabutools
 import pabutools.election as pbe
 import pabutools.election
@@ -17,6 +18,7 @@ from rules import *
 from analysis import *
 from parser import *
 from experiments import *
+from experiments_deprecated import ejr_plus_conversion_violations, find_data
 """
 Cannot use ApprovalProfile.is_trivial() since requires the cost to be an integer
 """
@@ -47,11 +49,15 @@ def main(loc, seed, test):
 def batch_run(loc, seed):
     rand.seed(seed)
 
+    data = find_data('./environment')
+
+    ejr_plus_conversion_violations(data, './environment/plots', True, True, True)
+
     t1 = time()
-    run_test_projects(runtime_test, './environment/datasets_under_30', './environment/plots', False)
-    run_test_projects(exclusion_test, './environment/datasets_under_30', './environment/plots', False)
-    run_test_projects(ejrplus_conversion_test, './environment/datasets_under_30', './environment/plots', False)
-    run_test_projects(ejrplusc_up_to_one, './environment/datasets_under_30', './environment/plots', False)
+    #run_test_projects(runtime_test, './environment/datasets_under_30', './environment/plots', False)
+    #run_test_projects(exclusion_test, './environment/datasets_under_30', './environment/plots', False)
+    #run_test_projects(ejrplus_conversion_test, './environment/datasets_under_30', './environment/plots', False)
+    #run_test_projects(ejrplusc_up_to_one, './environment/datasets_under_30', './environment/plots', False)
     t2 = time()
 
     print("Done")
