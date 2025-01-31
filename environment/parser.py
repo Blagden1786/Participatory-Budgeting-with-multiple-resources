@@ -62,4 +62,4 @@ def parse(path, num_resources=1, random_budget=False):
 
     profile = pbe.ApprovalProfile(init=ballots, instance=instance)
 
-    return (instance, profile)
+    return (path, instance, profile)
