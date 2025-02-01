@@ -35,18 +35,7 @@ Cannot use ApprovalProfile.is_trivial() since requires the cost to be an integer
 - Different aggregation functions for MES
 """
 
-def main(loc, seed, test):
-    rand.seed(seed)
-
-    t1 = time()
-    run_test_projects(test, loc, './environment/plots', False, False)
-    t2 = time()
-
-    print("Done")
-    print(f"Time taken: {(t2-t1)/60}")
-    print(f"See plots in {loc}/plots")
-
-def batch_run(loc, seed):
+def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
@@ -58,11 +47,9 @@ def batch_run(loc, seed):
 
     print("Done")
     print(f"Time taken: {(t2-t1)/60} minutes")
-    print(f"See plots in {loc}/plots_batch")
+    print(f"See plots in ./environment/plots_batch")
 
 if __name__ == "__main__":
-    loc = './environment'
     seed = 0
-    test = 'resource_exc'
 
-    batch_run(loc, seed)
+    batch_run(seed)
