@@ -18,7 +18,6 @@ from rules import *
 from analysis import *
 from parser import *
 from experiments import *
-from experiments_deprecated import ejr_plus_conversion_violations, find_data
 """
 Cannot use ApprovalProfile.is_trivial() since requires the cost to be an integer
 """
@@ -39,10 +38,7 @@ def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    run_test_projects(runtime_test, './environment/datasets_extended', './environment/plots_batch', False)
-    run_test_projects(exclusion_test, './environment/datasets_extended', './environment/plots_batch', False)
-    run_test_projects(ejrplus_conversion_test, './environment/datasets_extended', './environment/plots_batch', False)
-    run_test_projects(ejrplusc_up_to_one, './environment/datasets_extended', './environment/plots_batch', False)
+    run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', True)
     t2 = time()
 
     print("Done")

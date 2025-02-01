@@ -107,7 +107,7 @@ def ejrplus_conversion_test(instance:Minstance, profile:pbe.ApprovalProfile, rul
 
     return failures
 
-def ejrplusc_up_to_one(instance:Minstance, profile:pbe.ApprovalProfile, rule):
+def ejrpc_one_test(instance:Minstance, profile:pbe.ApprovalProfile, rule):
     """ Calculate EJR+ conversion up to one project
 
     Args:
@@ -120,6 +120,50 @@ def ejrplusc_up_to_one(instance:Minstance, profile:pbe.ApprovalProfile, rule):
 """
     return ejrplus_conversion_test(instance,profile,rule,True)
 
+def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, up_to_one:bool=False) -> float:
+    """Calculate the number of EJR+ violations up to one project or not
+
+    Args:
+        instance (Minstance)
+        profile (pbe.ApprovalProfile)
+        rule (_type_): The voting rule to use (greedy_rule, multi_method_equal_shares, exchange_rates_2d)
+        up_to_one (bool, optional): Whether to find violations up to one project or up to any. Defaults to True.
+
+    Returns:
+        float: The number of violations
+    """
+    # Generate outcome
+    outcome = rule(instance.copy(), profile.copy())
+    violations = [set() for _ in range(instance.budget_limit.size)]
+
+    # Find the EJR+ failures for each resource
+    for i in range(instance.budget_limit.size):
+        # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
+        converted_inst, converted_profile = to_1d(instance, profile, i)
+        converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
+
+        # Calculate the set of EJR+ failures for this resource
+        _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
+
+        violations[i] = failures
+        del converted_inst
+        del converted_profile
+        del converted_outcome
+
+    # The number of EJR+ violations is the total number which cause a violation in >= one dimension
+    return len(set.union(*violations))
+def ejrpa_one_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> float:
+    """ Calculate EJR+ all dim violations up to one project
+
+    Args:
+        instance (Minstance)
+        profile (pbe.ApprovalProfile)
+        rule (_type_): The voting rule to use (greedy_rule, multi_method_equal_shares, exchange_rates_2d)
+
+    Returns:
+        float: The number of violations
+"""
+    return ejrplus_alldim_test(instance,profile,rule,True)
 
 '''
 Graph Building Functions
@@ -194,8 +238,12 @@ def test_metadata(test, test_type:str) -> tuple[str,str,str]:
             return ('Exclusion Ratio', 'Exclusion ratio for different rules', f'exclusion_{test_type}')
         case 'ejrplus_conversion_test':
             return ('Number of Violations', 'EJR+ conversion violations', f'ejrc_{test_type}')
-        case 'ejrplusc_up_to_one':
+        case 'ejrpc_one_test':
             return ('Number of Violations', 'EJR+ conversion violations up to one project', f'ejrco_{test_type}')
+        case 'ejrplus_alldim_test':
+            return ('Number of Violations', 'EJR+ (all dimensions) violations', f'ejrao_{test_type}')
+        case 'ejrpa_one_test':
+            return ('Number of Violations', 'EJR+ (all dimensions) violations up to one project', f'ejrao_{test_type}')
         case _:
             return ('','','None')
 
@@ -270,7 +318,7 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
         er[project_num_split(projects)].append(test_name(instance.copy(), profile.copy(), exchange_rates_2d))
         if running_print:
             print(" Done")
-        
+
         del instance
         del profile
     # Create the dict for the graph builder and then create the graph
@@ -282,7 +330,7 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     graph_builder(graph_values, 'Number of Projects', test_meta[0], test_meta[1], test_meta[2], output_folder)
     if show_graph:
         plt.show()
-    
+
     del g
     del mes
     del er
