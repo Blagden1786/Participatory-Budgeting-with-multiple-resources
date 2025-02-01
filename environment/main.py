@@ -39,6 +39,7 @@ def batch_run(seed):
 
     t1 = time()
     run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', True)
+    run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', True)
     t2 = time()
 
     print("Done")
