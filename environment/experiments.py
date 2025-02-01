@@ -292,6 +292,9 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     # Loop through each election and run the test on it for each rule
     counter = 0
     for path, instance, profile in instances:
+        f = open('test.txt', 'a')
+        f.write(path+'\n')
+        f.close()
         projects = len(instance)
         voters = len(profile)
 
