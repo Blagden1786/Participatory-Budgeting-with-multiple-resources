@@ -7,6 +7,7 @@ from pabutools.election import Project, Instance, ApprovalProfile, ApprovalBallo
 from pabutools.election.satisfaction import Cost_Sat
 
 from time import time
+import gc
 import numpy as np
 import random as rand
 import matplotlib.pyplot as plt
@@ -75,7 +76,12 @@ def exclusion_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> flo
     # Generate winner
     outcome = rule(instance.copy(), profile.copy())
 
-    return exclusion_ratio(instance, profile, outcome)
+    ratio = exclusion_ratio(instance, profile, outcome)
+    del instance
+    del profile
+    del outcome
+    gc.collect()
+    return ratio
 
 def ejrplus_conversion_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, up_to_one:bool=False) -> float:
     """Calculate the number of EJR+ violations up to one project or not
@@ -264,6 +270,9 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
         er[project_num_split(projects)].append(test_name(instance.copy(), profile.copy(), exchange_rates_2d))
         if running_print:
             print(" Done")
+        
+        del instance
+        del profile
     # Create the dict for the graph builder and then create the graph
     graph_values = {'Greedy Rule': dict([(k, np.mean(g[k])) for k in g.keys()]),
                     'Multi-MES': dict([(k, np.mean(mes[k])) for k in mes.keys()]),
@@ -273,3 +282,9 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     graph_builder(graph_values, 'Number of Projects', test_meta[0], test_meta[1], test_meta[2], output_folder)
     if show_graph:
         plt.show()
+    
+    del g
+    del mes
+    del er
+    del graph_values
+    gc.collect()

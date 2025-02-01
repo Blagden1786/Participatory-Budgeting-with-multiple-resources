@@ -52,8 +52,8 @@ def batch_run(loc, seed):
     t1 = time()
     run_test_projects(runtime_test, './environment/datasets_extended', './environment/plots_batch', False)
     run_test_projects(exclusion_test, './environment/datasets_extended', './environment/plots_batch', False)
-    #run_test_projects(ejrplus_conversion_test, './environment/datasets_extended', './environment/plots_batch', False)
-    #run_test_projects(ejrplusc_up_to_one, './environment/datasets_extended', './environment/plots_batch', False)
+    run_test_projects(ejrplus_conversion_test, './environment/datasets_extended', './environment/plots_batch', False)
+    run_test_projects(ejrplusc_up_to_one, './environment/datasets_extended', './environment/plots_batch', False)
     t2 = time()
 
     print("Done")
