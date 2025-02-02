@@ -376,7 +376,7 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
     num_paths = len(paths)
 
     # Loop through each resource and run tests
-    for i in range(3, max_resource+1):
+    for i in range(1, max_resource+1):
         # Loop through each election and run the test on it for each rule
         counter = 0
         for path in paths:
