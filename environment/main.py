@@ -38,7 +38,7 @@ def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', False)
+    #run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', False)
     #run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', False)
     t2 = time()
 
