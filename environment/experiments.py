@@ -135,7 +135,6 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
     # Generate outcome
     outcome = rule(instance.copy(), profile.copy())
     violations = [set() for _ in range(instance.budget_limit.size)]
-
     # Find the EJR+ failures for each resource
     for i in range(instance.budget_limit.size):
         # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
@@ -149,9 +148,13 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
         del converted_inst
         del converted_profile
         del converted_outcome
-
+        del failures
+    
     # The number of EJR+ violations is the total number which cause a violation in >= one dimension
-    return len(set.union(*violations))
+    num = len(set.union(*violations))
+    del violations
+    gc.collect()
+    return num
 def ejrpa_one_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> float:
     """ Calculate EJR+ all dim violations up to one project
 
@@ -287,7 +290,8 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     # Build the instances (always two resources)
     if running_print:
         print("Generating Instances")
-    instances = generate_instances(paths, 2)
+    # FOR TESTING, sort to find where first problem instance is
+    instances = sorted(generate_instances(paths, 2), key= lambda x: len(x[1])*(len(x[2])**2), reverse=False)
 
     # Loop through each election and run the test on it for each rule
     counter = 0
