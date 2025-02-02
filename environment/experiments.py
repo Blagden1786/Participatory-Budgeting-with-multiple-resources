@@ -133,25 +133,33 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
     """
     # Generate outcome
     outcome = rule(instance.copy(), profile.copy())
-    violations = [set() for _ in range(instance.budget_limit.size)]
+    violations = set()
     # Find the EJR+ failures for each resource
-    for i in range(instance.budget_limit.size):
-        # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
-        converted_inst, converted_profile = to_1d(instance, profile, i)
-        converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
+    # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
+    converted_inst, converted_profile = to_1d(instance, profile, 0)
+    converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
 
-        # Calculate the set of EJR+ failures for this resource
-        failures, _ = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
+    # Calculate the set of EJR+ failures for this resource
+    _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
 
-        violations[i] = failures
-        del converted_inst
-        del converted_profile
-        del converted_outcome
-        del failures
-        gc.collect()
+    violations.update(failures)
+
+    # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
+    converted_inst, converted_profile = to_1d(instance, profile, 1)
+    converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
+
+    # Calculate the set of EJR+ failures for this resource
+    _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
+
+    violations.update(failures)
+    del converted_inst
+    del converted_profile
+    del converted_outcome
+    del failures
+    gc.collect()
 
     # The number of EJR+ violations is the total number which cause a violation in >= one dimension
-    num = max(violations)
+    num = len(set.union(*violations))
     del violations
     gc.collect()
     return num
@@ -294,9 +302,9 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     counter = 0
     for path in paths:
         # Generate instance
-        _, instance, profile = parse(path, 2)
+        instance, profile = parse(path, 2)
 
-        f = open('test2.txt', 'a')
+        f = open('test2.txt', 'x')
         f.write(path+'\n')
         f.close()
         projects = len(instance)
@@ -356,8 +364,8 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
         show_graph (bool, optional): Whether to show the graph once the test has finished. Defaults to False.
     """
     # Create dictionaries for greedy (g) and multi-mes (mes)
-    g = dict([(i,0) for i in range(1,max_resource+1)])
-    mes = dict([(i,0) for i in range(1,max_resource+1)])
+    g = dict([(i,[]) for i in range(1,max_resource+1)])
+    mes = dict([(i,[]) for i in range(1,max_resource+1)])
 
     # Get paths of datasets
     if running_print:
@@ -373,10 +381,6 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
         for path in paths:
             # Generate instance
             _, instance, profile = parse(path, i)
-
-            f = open('test2.txt', 'a')
-            f.write(path+'\n')
-            f.close()
             projects = len(instance)
             voters = len(profile)
 
@@ -386,6 +390,7 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
                 print(path)
                 print(f"Projects {projects}")
                 print(f"Votes: {voters}")
+                print(f"Resources: {i}")
                 print(f"Instance {counter} of {num_paths}")
                 print("...................................")
 
