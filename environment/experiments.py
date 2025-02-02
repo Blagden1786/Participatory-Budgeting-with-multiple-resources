@@ -287,9 +287,6 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     paths = get_data(data_location)
     num_paths = len(paths)
 
-    # Build the instances (always two resources)
-    if running_print:
-        print("Generating Instances")
     # FOR TESTING, sort to find where first problem instance is
     #instances = sorted(generate_instances(paths, 2), key= lambda x: len(x[1])*(len(x[2])**2), reverse=False)
 
@@ -331,6 +328,7 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
 
         del instance
         del profile
+        gc.collect()
     # Create the dict for the graph builder and then create the graph
     graph_values = {'Greedy Rule': dict([(k, np.mean(g[k])) for k in g.keys()]),
                     'Multi-MES': dict([(k, np.mean(mes[k])) for k in mes.keys()]),
@@ -344,5 +342,79 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     del g
     del mes
     del er
+    del graph_values
+    gc.collect()
+
+def run_test_resources(test_name, max_resource:int, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False):
+    """Framework for running tests which measure against number of resources. Runs for Greedy and mmes
+
+    Args:
+        test_name (_type_): The test name
+        data_location (str): Where the datasets are located
+        output_folder (str): The folder to output the graphs to
+        running_print (bool, optional): Whether to print during the running of the test. Defaults to False.
+        show_graph (bool, optional): Whether to show the graph once the test has finished. Defaults to False.
+    """
+    # Create dictionaries for greedy (g) and multi-mes (mes)
+    g = dict([(i,0) for i in range(1,max_resource+1)])
+    mes = dict([(i,0) for i in range(1,max_resource+1)])
+
+    # Get paths of datasets
+    if running_print:
+        print(f"Running test: {test_name.__name__}")
+        print("Retrieving file paths")
+    paths = get_data(data_location)
+    num_paths = len(paths)
+
+    # Loop through each resource and run tests
+    for i in range(1, max_resource+1):
+        # Loop through each election and run the test on it for each rule
+        counter = 0
+        for path in paths:
+            # Generate instance
+            _, instance, profile = parse(path, i)
+
+            f = open('test2.txt', 'a')
+            f.write(path+'\n')
+            f.close()
+            projects = len(instance)
+            voters = len(profile)
+
+            if running_print:
+                counter += 1
+                print("-----------------------------------")
+                print(path)
+                print(f"Projects {projects}")
+                print(f"Votes: {voters}")
+                print(f"Instance {counter} of {num_paths}")
+                print("...................................")
+
+            # Add the outcome of the test to the dictionary
+            if running_print:
+                print("Greedy Rule", end='')
+            g[i].append(test_name(instance.copy(), profile.copy(), greedy_rule))
+
+            if running_print:
+                print(" Done\nMulti-MES", end='')
+            mes[i].append(test_name(instance.copy(), profile.copy(), multi_method_equal_shares))
+
+            if running_print:
+                print(" Done")
+
+
+            del instance
+            del profile
+            gc.collect()
+    # Create the dict for the graph builder and then create the graph
+    graph_values = {'Greedy Rule': dict([(k, np.mean(g[k])) for k in g.keys()]),
+                    'Multi-MES': dict([(k, np.mean(mes[k])) for k in mes.keys()]),}
+    test_meta = test_metadata(test_name, 'resources')
+
+    graph_builder(graph_values, 'Number of Resources', test_meta[0], test_meta[1], test_meta[2], output_folder)
+    if show_graph:
+        plt.show()
+
+    del g
+    del mes
     del graph_values
     gc.collect()
