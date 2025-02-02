@@ -1,3 +1,4 @@
+from cProfile import label
 import os
 from parser import *
 from rules import *
@@ -435,7 +436,8 @@ def run_test_aggregation(functions:list, data_location:str, output_folder:str, r
         running_print (bool, optional): Whether to print updates as the program runs. Defaults to False.
         show_graph (bool, optional): Whether to show the graph once the testing is complete
     """
-    mes = dict([(f'{f.__name__}\n{g.__name__}', 0) for f,g in combinations(functions, 2)])
+    mes = dict([(f.__name__, dict([(g.__name__, 0) for g in functions])) for f in functions])
+
     # retrieve list of paths and count them (for printing)
     if running_print:
         print(f"Running test: Different aggregation functions")
@@ -474,14 +476,17 @@ def run_test_aggregation(functions:list, data_location:str, output_folder:str, r
         # Count number of differences
         for f,g in combinations(functions, 2):
             if  not outputs[f.__name__] == outputs[g.__name__]:
-                mes[f'{f.__name__}\n{g.__name__}'] += 1
+                # Add 1 to the numbers of differences
+                mes[f.__name__][g.__name__] += 1
+                mes[g.__name__][f.__name__] += 1
         del instance
         del profile
         gc.collect()
     
     # Create the bar graph
     plt.figure("Differences")
-    plt.bar(mes.keys(), [x/num_paths for x in mes.values()])
+    for f in functions:
+        plt.bar(mes[f.__name__].keys(), mes[f.__name__].values(), label=f'{f}')
     plt.xlabel("Aggregation Function")
     plt.ylabel("Proportion of instances where output differs")
     plt.title("How the output of different aggregation functions differ")

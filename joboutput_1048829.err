@@ -1,2 +1,4 @@
 /dcs/22/u2200430/cs344/simulation/environment/rho_calculations.py:46: RuntimeWarning: divide by zero encountered in scalar divide
   rho_r = price_left / (voters_left * c.cost[r])
+/var/spool/slurmd/job1048829/slurm_script: line 19: 23334 Killed                  python3.12 ./environment/main.py
+slurmstepd: error: Detected 2 oom-kill event(s) in StepId=1048829.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
