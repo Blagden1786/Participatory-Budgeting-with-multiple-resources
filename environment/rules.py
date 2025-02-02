@@ -76,7 +76,6 @@ def multi_method_equal_shares(inst:Minstance, profile:pbe.ApprovalProfile, aggre
         rho_values = dict([(c, rho_affordable(c, project_voters[c], voter_budgets, aggregation)) for c in inst])
 
         chosen_project = min(inst, key= lambda c: rho_values[c][0])
-
         # If chosen project has rho value infinty then all projects have rho value infinity; finish since no more can be funded.
         if rho_values[chosen_project][0] == inf:
             break
