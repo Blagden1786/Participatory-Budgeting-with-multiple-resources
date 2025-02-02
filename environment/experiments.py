@@ -299,7 +299,7 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
         # Generate instance
         instance, profile = parse(path, 2)
 
-        f = open('test.txt', 'a')
+        f = open('test2.txt', 'x')
         f.write(path+'\n')
         f.close()
         projects = len(instance)
