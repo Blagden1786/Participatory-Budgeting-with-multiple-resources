@@ -36,11 +36,9 @@ Cannot use ApprovalProfile.is_trivial() since requires the cost to be an integer
 
 def batch_run(seed):
     rand.seed(seed)
-    
-    paths = get_data(data_location)
 
     t1 = time()
-    #run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', False)
+    run_test_projects(ejrpc_one_test, './environment/datasets_extended', './environment/plots_batch', False)
     #run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', False)
     t2 = time()
 
@@ -50,5 +48,5 @@ def batch_run(seed):
 
 if __name__ == "__main__":
     seed = 0
-    
+
     batch_run(seed)

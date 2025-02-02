@@ -65,7 +65,7 @@ def ejr_plus_conversion(inst:Minstance, profile:pbe.ApprovalProfile, outcome:Col
         Returns:
             int: Number of violations of this type.
         """
-    converted_inst, converted_profile = to_1d_converted(inst, profile)
+    converted_inst, converted_profile = to_1d(inst, profile, 0)
 
     converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
 

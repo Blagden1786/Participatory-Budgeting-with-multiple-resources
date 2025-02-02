@@ -149,7 +149,7 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
         del converted_profile
         del converted_outcome
         del failures
-    
+
     # The number of EJR+ violations is the total number which cause a violation in >= one dimension
     num = len(set.union(*violations))
     del violations
@@ -291,11 +291,14 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     if running_print:
         print("Generating Instances")
     # FOR TESTING, sort to find where first problem instance is
-    instances = sorted(generate_instances(paths, 2), key= lambda x: len(x[1])*(len(x[2])**2), reverse=False)
+    #instances = sorted(generate_instances(paths, 2), key= lambda x: len(x[1])*(len(x[2])**2), reverse=False)
 
     # Loop through each election and run the test on it for each rule
     counter = 0
-    for path, instance, profile in instances:
+    for path in paths:
+        # Generate instance
+        instance, profile = parse(path, 2)
+
         f = open('test.txt', 'a')
         f.write(path+'\n')
         f.close()
