@@ -106,7 +106,6 @@ def ejrplus_conversion_test(instance:Minstance, profile:pbe.ApprovalProfile, rul
     failures, _ = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
 
     return failures
-
 def ejrpc_one_test(instance:Minstance, profile:pbe.ApprovalProfile, rule):
     """ Calculate EJR+ conversion up to one project
 
@@ -142,16 +141,17 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
         converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
 
         # Calculate the set of EJR+ failures for this resource
-        _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
+        failures, _ = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
 
         violations[i] = failures
         del converted_inst
         del converted_profile
         del converted_outcome
         del failures
+        gc.collect()
 
     # The number of EJR+ violations is the total number which cause a violation in >= one dimension
-    num = len(set.union(*violations))
+    num = max(violations)
     del violations
     gc.collect()
     return num

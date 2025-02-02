@@ -52,56 +52,9 @@ def to_1d_converted(inst:Minstance, profile:pbe.ApprovalProfile):
     new_ballots = [pbe.ApprovalBallot([new_inst.get_project(c.name) for c in i]) for i in profile]
     return(new_inst,pbe.ApprovalProfile(new_ballots, new_inst))
 
+
+
 # EJR+ violations
-def ejr_plus_conversion(inst:Minstance, profile:pbe.ApprovalProfile, outcome:Collection[Mproject], up_to_one:bool = True) -> int:
-    """Consider the PB instance where the budget and project costs are reduced to one dimension. Check for EJR+ violatios in this scenario.
-
-        Args:
-            inst (Minstance): The instance to check
-            profile (pbe.ApprovalProfile): Approval profile
-            outcome (Collection[Mproject]): The outcome to check
-            up_to_one (bool, optional): Whether to consider EJR+ up to one project or up to any. Defaults to True.
-
-        Returns:
-            int: Number of violations of this type.
-        """
-    converted_inst, converted_profile = to_1d(inst, profile, 0)
-
-    converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
-
-    failures, _ = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
-
-    return failures
-
-def ejr_plus_restricted(inst:Minstance, profile:pbe.ApprovalProfile, outcome:Collection[Mproject], up_to_one:bool = True) -> int:
-    """Consider the PB instance where the budget is restricted to a single dimension and check for EJR+ violations.
-    Repeat this for all dimensios. We say a project violates EJR+ if it violates it in any dimension.
-
-        Args:
-            inst (Minstance): The instance to check
-            profile (pbe.ApprovalProfile): Approval profile
-            outcome (Collection[Mproject]): The outcome to check
-            up_to_one (bool, optional): Whether to consider EJR+ up to one project or not. Defaults to True.
-
-        Returns:
-            int: Number of violations of this type.
-    """
-    failed_projects = [set() for _ in range(inst.budget_limit.size)]
-
-    for i in range(inst.budget_limit.size):
-        print(f"Resource {i}")
-        converted_inst, converted_profile = to_1d(inst, profile, i)
-
-        converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
-        print("Now checking violations")
-        _, failed = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
-        failed_projects[i] = failed
-        print(f"Failures {failed}")
-
-    # A project violates EJR+ MIN if it violates it in any dimension
-    failures = set.union(*failed_projects)
-    return len(failures)
-
 def get_utilities_maps(instance, sat_profile):
     proj_utils = {c: {} for c in instance}
     vot_utils = {}
