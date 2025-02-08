@@ -134,31 +134,25 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
     outcome = rule(instance.copy(), profile.copy())
     violations = set()
     # Find the EJR+ failures for each resource
-    # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
-    converted_inst, converted_profile = to_1d(instance, profile, 0)
-    converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
+    for i in range(instance.budget_limit.size):
+        # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
+        converted_inst, converted_profile = to_1d(instance, profile, i)
+        converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
 
-    # Calculate the set of EJR+ failures for this resource
-    _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
+        # Calculate the set of EJR+ failures for this resource
+        _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
 
-    violations.update(failures)
+        # Add violations to the set of all violations
+        violations.update(failures)
 
-    # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
-    converted_inst, converted_profile = to_1d(instance, profile, 1)
-    converted_outcome = [converted_inst.get_project(c.name) for c in outcome]
-
-    # Calculate the set of EJR+ failures for this resource
-    _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
-
-    violations.update(failures)
-    del converted_inst
-    del converted_profile
-    del converted_outcome
-    del failures
-    gc.collect()
+        del converted_inst
+        del converted_profile
+        del converted_outcome
+        del failures
+        gc.collect()
 
     # The number of EJR+ violations is the total number which cause a violation in >= one dimension
-    num = len(set.union(*violations))
+    num = len(violations)
     del violations
     gc.collect()
     return num
@@ -252,7 +246,7 @@ def test_metadata(test, test_type:str) -> tuple[str,str,str]:
         case 'ejrpc_one_test':
             return ('Number of Violations', 'EJR+ conversion violations up to one project', f'ejrco_{test_type}')
         case 'ejrplus_alldim_test':
-            return ('Number of Violations', 'EJR+ (all dimensions) violations', f'ejrao_{test_type}')
+            return ('Number of Violations', 'EJR+ (all dimensions) violations', f'ejra_{test_type}')
         case 'ejrpa_one_test':
             return ('Number of Violations', 'EJR+ (all dimensions) violations up to one project', f'ejrao_{test_type}')
         case _:
@@ -303,10 +297,6 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     for path in paths:
         # Generate instance
         _, instance, profile = parse(path, 2)
-
-        f = open('test2.txt', 'x')
-        f.write(path+'\n')
-        f.close()
         projects = len(instance)
         voters = len(profile)
 
