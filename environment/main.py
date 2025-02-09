@@ -3,6 +3,7 @@ import random as rand
 import sys
 
 from matplotlib.pyplot import plot
+from numpy import floor
 import pabutools
 import pabutools.election as pbe
 import pabutools.election
@@ -50,10 +51,15 @@ def batch_run(seed):
     t2 = time()
 
     print("Done")
-    print(f"Time taken: {(t2-t1)/60} minutes")
+    print(f"Time taken: {to_hours(t2-t1)}")
     print(f"See plots in ./environment/plots_batch")
 
 if __name__ == "__main__":
     seed = 0
 
     batch_run(seed)
+
+def to_hours(x):
+    h = floor(x/3600)
+    m = floor(x/60 - h*60)
+    return f"{h}:{m}"
