@@ -34,7 +34,6 @@ Cannot use ApprovalProfile.is_trivial() since requires the cost to be an integer
 - Different epsilon for exchange rates
 - Different aggregation functions for MES
 """
-
 def batch_run(seed):
     rand.seed(seed)
 
@@ -43,12 +42,17 @@ def batch_run(seed):
     #run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', False, False)
     #run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', True)
     #run_test_resources(ejrplus_conversion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    #run_test_resources(ejrpc_one_test, 3, './environment/datasets_under_30', './environment/plots', True, False)
-    run_test_resources(ejrplus_alldim_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', True)
-    run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', True)
+    run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    #run_test_resources(ejrplus_alldim_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    #run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    #run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', True)
+    #run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', True)
     t2 = time()
+
+    def to_hours(x):
+        h = floor(x/3600)
+        m = floor(x/60 - h*60)
+        return f"{h}:{m}"
 
     print("Done")
     print(f"Time taken: {to_hours(t2-t1)}")
@@ -58,8 +62,3 @@ if __name__ == "__main__":
     seed = 0
 
     batch_run(seed)
-
-def to_hours(x):
-    h = floor(x/3600)
-    m = floor(x/60 - h*60)
-    return f"{h}:{m}"
