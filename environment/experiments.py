@@ -430,7 +430,7 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
 
     # retrieve list of paths and count them (for printing)
     if running_print:
-        print(f"Running test: Different aggregation functions")
+        print(f"Running test: Different aggregation functions against {test_name.__name__}")
         print("Retrieving file paths")
     paths = get_data(data_location)
     num_paths = len(paths)
