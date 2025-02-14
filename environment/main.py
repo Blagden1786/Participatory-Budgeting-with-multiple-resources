@@ -38,8 +38,9 @@ def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    run_test_resources(runtime_test, 10, './environment/datasets_resources', './environment/plots_batch', False, False)
-    run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', False, False)
+    run_test_aggregation(exclusion_test, [np.max, np.min, np.mean, np.median], './environment/datasets_under_30', './environment/plots', True, True)
+    #run_test_resources(runtime_test, 10, './environment/datasets_resources', './environment/plots_batch', False, False)
+    #run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', False, False)
     #run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', True)
     #run_test_resources(ejrplus_conversion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     #run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
@@ -50,9 +51,9 @@ def batch_run(seed):
     t2 = time()
 
     def to_hours(x):
-        h = floor(x/3600)
-        m = floor(x/60 - h*60)
-        return f"{h}:{m}"
+        h = int(floor(x/3600))
+        m = int(floor(x/60 - h*60))
+        return f"{h} hours and {m} minutes"
 
     print("Done")
     print(f"Time taken: {to_hours(t2-t1)}")

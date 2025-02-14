@@ -173,7 +173,7 @@ def ejrpa_one_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> flo
 '''
 Graph Building Functions
 '''
-def graph_builder(x_ys:dict[str,dict[str, float]], x_title:str, y_title:str, graph_title:str, graph_name:str,  out_folder:str,):
+def graph_builder(x_ys:dict[str,dict[str, float]], x_title:str, y_title:str, graph_title:str, graph_name:str,  out_folder:str):
     """Generate a graph given the parameters
 
     Args:
@@ -414,12 +414,12 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
     del graph_values
     gc.collect()
 
-def run_test_aggregation(functions:list, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False):
+def run_test_aggregation(test_name, functions:list, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False):
     """Run a given test for different aggregation functions with Multi-MES
 
 
     Args:
-        test_name (function): The test to run
+        test_name (function): The test to run. If False then will compare the functions
         functions (list[function]): The list of aggregation functions: list[float] -> float
         data_location (str): Where the dataset is stored
         output_folder (str): The folder to save graphs in
@@ -439,7 +439,7 @@ def run_test_aggregation(functions:list, data_location:str, output_folder:str, r
     counter = 0
     for path in paths:
         # Generate instance
-        _, instance, profile = parse(path, 2)
+        _, instance, profile = parse(path, 5)
         projects = len(instance)
         voters = len(profile)
 
@@ -452,33 +452,64 @@ def run_test_aggregation(functions:list, data_location:str, output_folder:str, r
             print(f"Instance {counter} of {num_paths}")
             print("...................................")
 
-        outputs = dict([(x.__name__,0) for x in functions])
-        for f in functions:
-            # Add the outcome of the test to the dictionary
-            if running_print:
-                print(f"Multi-MES({f.__name__})", end='')
+        
+        if test_name == False:
+            outputs = dict([(x.__name__,0) for x in functions])
+            for f in functions:
+                # Add the outcome of the test to the dictionary
+                if running_print:
+                    print(f"Multi-MES({f.__name__})", end='')
 
-            outputs[f.__name__] = multi_method_equal_shares(instance.copy(), profile.copy(), f, False)
+                outputs[f.__name__] = multi_method_equal_shares(instance.copy(), profile.copy(), f, False)
 
-            if running_print:
-                print(" Done")
+                if running_print:
+                    print(" Done")
+            del instance
+            del profile
+            gc.collect()
 
-        # Count number of differences
-        for f,g in combinations(functions, 2):
-            if  not outputs[f.__name__] == outputs[g.__name__]:
-                # Add 1 to the numbers of differences
-                mes[f'{f.__name__},{g.__name__}'] += 1
-        del instance
-        del profile
-        gc.collect()
+            # Count number of differences
+            for f,g in combinations(functions, 2):
+                if  not outputs[f.__name__] == outputs[g.__name__]:
+                    # Add 1 to the numbers of differences
+                    mes[f'{f.__name__},{g.__name__}'] += 1
+                
+            
+        else:
+            outputs = dict([(x.__name__,[]) for x in functions])
+            for f in functions:
+                if running_print:
+                    print(f"Multi-MES({f.__name__})", end='')
+                
+                # Run the desired test on multi-mes with the aggregation function f
+                outputs[f.__name__].append(test_name(instance.copy(), profile.copy(), lambda i,p: multi_method_equal_shares(i,p,f,False)))
 
-    # Create the bar graph
-    plt.figure("Differences")
-    plt.bar(mes.keys(), [x/num_paths for x in mes.values()])
-    plt.xlabel("Aggregation Function")
-    plt.ylabel("Proportion of instances where output differs")
-    plt.title("How the output of different aggregation functions differ")
-    plt.savefig(f"{output_folder}/diff_aggregation.png")
+                if running_print:
+                    print(" Done")
+            del instance
+            del profile
+            gc.collect()
+
+            mes = dict([(f.__name__,np.mean(outputs[f.__name__])) for f in functions])
+            
+            
+    if test_name == False:
+        # Create the bar graph
+        plt.figure("Differences")
+        plt.bar(mes.keys(), [x/num_paths for x in mes.values()])
+        plt.xlabel("Aggregation Function")
+        plt.ylabel("Proportion of instances where output differs")
+        plt.title("How the output of different aggregation functions differ")
+        plt.savefig(f"{output_folder}/diff_aggregation.png")
+    else:
+        meta = test_metadata(test_name, "aggregation")
+        # Create the bar graph
+        plt.figure(meta[2])
+        plt.bar(mes.keys(), mes.values())
+        plt.xlabel("Aggregation Function")
+        plt.ylabel(meta[0])
+        plt.title(meta[1])
+        plt.savefig(f"{output_folder}/{meta[2]}.png")
 
     if show_graph:
         plt.show()
