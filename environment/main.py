@@ -38,16 +38,11 @@ def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    run_test_aggregation(ejrpc_one_test, [np.max, np.min, np.mean, np.median], './environment/datasets_extended', './environment/plots_batch', False, False)
-    #run_test_resources(runtime_test, 10, './environment/datasets_resources', './environment/plots_batch', False, False)
-    #run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', False, False)
-    #run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', True)
-    #run_test_resources(ejrplus_conversion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    #run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    #run_test_resources(ejrplus_alldim_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    #run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    #run_test_projects(ejrpa_one_test, './environment/datasets_extended', './environment/plots_batch', True)
-    #run_test_projects(ejrplus_alldim_test, './environment/datasets_extended', './environment/plots_batch', True)
+    run_test_aggregation(ejrpc_one_test, [max, min, np.mean, np.median], './environment/datasets_extended', './environment/plots_batch', True, False)
+    run_test_resources(runtime_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     t2 = time()
 
     def to_hours(x):

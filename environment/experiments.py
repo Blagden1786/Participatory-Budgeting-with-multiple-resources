@@ -377,6 +377,7 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
             if running_print:
                 counter += 1
                 print("-----------------------------------")
+                print(f"Resource Test: {test_name.__name__}")
                 print(path)
                 print(f"Projects {projects}")
                 print(f"Votes: {voters}")
@@ -446,13 +447,14 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
         if running_print:
             counter += 1
             print("-----------------------------------")
+            print(f"Aggregation Test: {test_name.__name__}")
             print(path)
             print(f"Projects {projects}")
             print(f"Votes: {voters}")
             print(f"Instance {counter} of {num_paths}")
             print("...................................")
 
-        
+
         if test_name == False:
             outputs = dict([(x.__name__,0) for x in functions])
             for f in functions:
@@ -473,14 +475,14 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
                 if  not outputs[f.__name__] == outputs[g.__name__]:
                     # Add 1 to the numbers of differences
                     mes[f'{f.__name__},{g.__name__}'] += 1
-                
-            
+
+
         else:
             outputs = dict([(x.__name__,[]) for x in functions])
             for f in functions:
                 if running_print:
                     print(f"Multi-MES({f.__name__})", end='')
-                
+
                 # Run the desired test on multi-mes with the aggregation function f
                 outputs[f.__name__].append(test_name(instance.copy(), profile.copy(), lambda i,p: multi_method_equal_shares(i,p,f,False)))
 
@@ -491,8 +493,8 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
             gc.collect()
 
             mes = dict([(f.__name__,np.mean(outputs[f.__name__])) for f in functions])
-            
-            
+
+
     if test_name == False:
         # Create the bar graph
         plt.figure("Differences")
