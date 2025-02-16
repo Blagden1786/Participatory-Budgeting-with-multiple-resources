@@ -41,7 +41,7 @@ def batch_run(seed):
     #run_test_aggregation(ejrpc_one_test, [max, min, np.mean, np.median], './environment/datasets_extended', './environment/plots_batch', True, False)
     #run_test_resources(runtime_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     #run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    #run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     t2 = time()
 
