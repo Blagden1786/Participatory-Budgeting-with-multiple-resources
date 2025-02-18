@@ -1,18 +1,7 @@
 from time import time
 import random as rand
-import sys
-
-from matplotlib.pyplot import plot
 from numpy import floor
-import pabutools
-import pabutools.election as pbe
-import pabutools.election
-import pabutools.rules as pbr
-import pabutools.analysis.justifiedrepresentation as pbejr
-import pabutools.analysis.votersatisfaction as pbas
-from pabutools.election.satisfaction import Cost_Sat
-import pabutools.tiebreaking as pbt
-
+import sys
 
 from setup import *
 from rules import *
@@ -38,11 +27,11 @@ def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    #run_test_aggregation(ejrpc_one_test, [max, min, np.mean, np.median], './environment/datasets_extended', './environment/plots_batch', True, False)
+    run_test_aggregation(False, [max, min, np.mean, np.median], './environment/datasets_under_30', './environment/plots', True, True)
     #run_test_resources(runtime_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     #run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     #run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    #run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     t2 = time()
 
     def to_hours(x):

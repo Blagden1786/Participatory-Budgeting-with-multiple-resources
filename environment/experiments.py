@@ -4,9 +4,6 @@ from parser import *
 from rules import *
 from analysis import *
 
-from pabutools.election import Project, Instance, ApprovalProfile, ApprovalBallot
-from pabutools.election.satisfaction import Cost_Sat
-
 from time import time
 from itertools import combinations
 import gc
@@ -431,7 +428,7 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
 
     # retrieve list of paths and count them (for printing)
     if running_print:
-        print(f"Running test: Different aggregation functions against {test_name.__name__}")
+        print(f"Running test: Different aggregation functions against {test_name}")
         print("Retrieving file paths")
     paths = get_data(data_location)
     num_paths = len(paths)
@@ -447,7 +444,7 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
         if running_print:
             counter += 1
             print("-----------------------------------")
-            print(f"Aggregation Test: {test_name.__name__}")
+            print(f"Aggregation Test: {test_name}")
             print(path)
             print(f"Projects {projects}")
             print(f"Votes: {voters}")
@@ -472,7 +469,7 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
 
             # Count number of differences
             for f,g in combinations(functions, 2):
-                if  not outputs[f.__name__] == outputs[g.__name__]:
+                if  outputs[f.__name__] != outputs[g.__name__]:
                     # Add 1 to the numbers of differences
                     mes[f'{f.__name__},{g.__name__}'] += 1
 
