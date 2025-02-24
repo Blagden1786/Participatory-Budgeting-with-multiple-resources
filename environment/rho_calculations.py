@@ -57,7 +57,7 @@ def rho_affordable(c:Mproject, voters:list[int], voter_budgets, aggregation) -> 
     return (aggregated_rho,rho)
 
 
-def rho_epsilon_converted_affordable(c:Mproject, inst:Minstance, voters, voter_budgets:np.array, epsilon_type:str = "rel") -> tuple[float,float]:
+def rho_epsilon_converted_affordable(c:Mproject, inst:Minstance, voters, voter_budgets:np.array, epsilon_type:str = "rel_gross_vot") -> tuple[float,float]:
     """Calculate the project's (rho,epsilon)-converted_affordability
     1. Convert all funds to resource 1 (Called £)
     2. Calculate rho-affordability
@@ -66,14 +66,22 @@ def rho_epsilon_converted_affordable(c:Mproject, inst:Minstance, voters, voter_b
     Args:
         c (Mproject): Project to calculate for
         inst (Minstance): PB instance
-        profile (pbe.ApprovalProfile): Voter profile
+        voters: The voters for the project
         voter_budgets (_type_): The remaining budgets of the voters where index i is the voter corresponding to profile[i]
         epsilon_type (str): The type of value epsilon is. Can be one of the following values:
-                                    rel = amount exhcanged / project cost (Default)
-                                    abs = amound exchanged
-                                    count = number of exchanges needed in the first round of funding
+            num: Number of conversions
+            indic: If conversion is required
+            gross: Gross amount that will need to be converted
+            rel_gross: Relative version of above
+            gross_vot: Gross amount that each voter will need to covert
+            rel_gross_vot: Relative version of above
+            net: Net amount the will need to be converted
+            rel_net: Relative version of above
+            net_vot: Net amount that each voter will need to convert
+            rel_net_vot: Relative version of above
+            zero: epsilon=0
     Returns:
-        tuple[float,float]: _description_
+        tuple[float,float]: The pair (rho,epsilon)
     """
 
     # Convert everything to £
@@ -104,20 +112,47 @@ def rho_epsilon_converted_affordable(c:Mproject, inst:Minstance, voters, voter_b
         rho = price_left / (voters_left * project_cost)
 
     # Calculate epsilon
-    # Different ways of calculating epsilon
+    # Some auxillary functions and vars
+    def will_voter_convert(x):
+        return (voter_budgets[x][0] < c.cost[0]/num_voters) ^ (voter_budgets[x][1] < c.cost[1]/num_voters)
+
+    tot = (sum([voter_budgets[i][0] for i in voters]), sum([voter_budgets[i][0] for i in voters]))
+
+    # Match for the different types of epsilon
     match (epsilon_type):
-        case "abs":
-            epsilon = sum([max(0,c.cost[0]/num_voters - voter_budgets[i][0]) + dollar_to_pound_er*max(0,c.cost[1]/num_voters - voter_budgets[i][1]) for i in voters])
-        case "count":
-            def will_voter_convert(x):
-                if (voter_budgets[x][0] < c.cost[0]/num_voters) ^ (voter_budgets[x][1] < c.cost[1]/num_voters):
-                    return 1
-                else:
-                    return 0
+        case "num":
+            # Number of conversions
             epsilon = sum(map(will_voter_convert ,voters))
-        case _:
-            # When no or rel or an incorrect argument is given, default to the relative version
+        case "indic":
+            # If conversion is required
+            epsilon = any(map(will_voter_convert, voters))
+        case "gross":
+            # Gross amount that will need to be converted
+            epsilon = max(0,c.cost[0]-tot[0]) + dollar_to_pound_er*max(0,c.cost[1]-tot[1])
+        case "rel_gross":
+            # Relative version of above
+            epsilon = max(0,c.cost[0]-tot[0]) + dollar_to_pound_er*max(0,c.cost[1]-tot[1])/project_cost
+        case "gross_vot":
+            # Gross amount that each voter will need to covert
+            epsilon = sum([max(0,c.cost[0]/num_voters - voter_budgets[i][0]) + dollar_to_pound_er*max(0,c.cost[1]/num_voters - voter_budgets[i][1]) for i in voters])
+        case "rel_gross_vot":
+            # Relative version of above
             epsilon = sum([max(0,c.cost[0]/num_voters - voter_budgets[i][0]) + dollar_to_pound_er*max(0,c.cost[1]/num_voters - voter_budgets[i][1]) for i in voters])/project_cost
+        case "net":
+            # Net amount the will need to be converted
+            epsilon = abs(max(0,c.cost[0]-tot[0]) - dollar_to_pound_er*max(0,c.cost[1]-tot[1]))
+        case "rel_net":
+            # Relative version of above
+            epsilon = abs(max(0,c.cost[0]-tot[0]) - dollar_to_pound_er*max(0,c.cost[1]-tot[1]))/project_cost
+        case "net_vot":
+            # Net amount that each voter will need to convert
+            epsilon = abs(sum([max(0,c.cost[0]/num_voters - voter_budgets[i][0]) - dollar_to_pound_er*max(0,c.cost[1]/num_voters - voter_budgets[i][1]) for i in voters]))
+        case "rel_net_vot":
+            # Relative version of above
+            epsilon = abs(sum([max(0,c.cost[0]/num_voters - voter_budgets[i][0]) - dollar_to_pound_er*max(0,c.cost[1]/num_voters - voter_budgets[i][1]) for i in voters]))/project_cost
+        case _:
+            # When incorrect argument is given, default to the zero version
+            epsilon = 0
 
     return (rho,epsilon)
 
