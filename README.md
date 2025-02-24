@@ -29,7 +29,7 @@ Files:
 - experiments.py - The tests and experiments that can be run.
 
 Running an experiment
-- Set the seed in the "if __name__ == 'name':" code block. Default is 0 and all tests have been run using this.
+- Set the seed in the "if \_\_name\_\_ == 'name':" code block. Default is 0 and all tests have been run using this.
 
 In main.py, in the function batch_run add an experiment to run:
 - run_test_projects(test_name, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
@@ -37,18 +37,18 @@ In main.py, in the function batch_run add an experiment to run:
 - run_test_aggregation(test_name, functions:list, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
 
 The first argument (test_name) should be the name of the test. These are:
--runtime_test - Runtime
--exclusion_test - Exclusion Ratio
--ejrplus_conversion_test - EJR+ Conversion
--ejrpc_one_test - EJR+ Conversion up to one
--elrplus_alldim_test - EJR+ All Dimensions
--ejrpa_one_test - EJR+ All Dimensions up to one
--False - The default test (Only for run_test_aggregation)
+- runtime_test - Runtime
+- exclusion_test - Exclusion Ratio
+- ejrplus_conversion_test - EJR+ Conversion
+- ejrpc_one_test - EJR+ Conversion up to one
+- elrplus_alldim_test - EJR+ All Dimensions
+- ejrpa_one_test - EJR+ All Dimensions up to one
+- False - The default test (Only for run_test_aggregation)
 
-data_location is the location of the folder where the data is stored.
-output_folder is the location of the folder where the graph should be saved to.
-running_print is a bool whether anything should be printed to the terminal during execution (Recommended: True).
-show_graph is a bool whether to show the graph once the test has finished (If multiple tests are being run set as False).
+data_location is the location of the folder where the data is stored.  
+output_folder is the location of the folder where the graph should be saved to.  
+running_print is a bool whether anything should be printed to the terminal during execution (Recommended: True).  
+show_graph is a bool whether to show the graph once the test has finished (If multiple tests are being run set as False).  
 
-max_resources is the number of resources to test up to (Recommended: <= 10).
-functions is a list of aggregation functions to use for multi-MES (Recommended: [max,min,np.mean,np.median]).
+max_resources is the number of resources to test up to (Recommended: <= 10).  
+functions is a list of aggregation functions to use for multi-MES (Recommended: [max,min,np.mean,np.median]).  
