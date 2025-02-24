@@ -1,7 +1,8 @@
--- CS344 THIRD YEAR PROJECT - PARTICIPATORY BUDGETING WITH MULTIPLE RESOURCES --
+-- CS344 THIRD YEAR PROJECT - PARTICIPATORY BUDGETING WITH MULTIPLE RESOURCES SIMULATION --
 
 Author: George Blagden
 
+As part of a university research project, I have been investigating a voting system called Participatory Budgeting (PB) (https://en.wikipedia.org/wiki/Participatory_budgeting) and an extension to one with multiple resources. As part of this, one part was to conduct some experiments to see how well different voting mechanisms work in practice. This repository contains the code required to run tests on some PB elections using the mechanisms developed during my research.
 
 Links to the Data from PabuLib (Data correct as of 24/02/2025):  
 - Small instances (Below 30 projects): https://pabulib.org/?hash=67839fdfa933a
@@ -53,3 +54,9 @@ The first argument (test_name) should be the name of the test. These are:
 
 ```max_resources``` is the number of resources to test up to (Recommended: <= 10).  
 ```functions``` is a list of aggregation functions to use for multi-MES (Recommended: ```[max,min,np.mean,np.median]```).  
+
+Credits:  
+- PabuLib - https://pabulib.org/,
+Piotr Faliszewski, Jaroslaw Flis, Dominik Peters, Grzegorz Pierczy´nski, Piotr Skowron, Dariusz Stolicki,
+Stanislaw Szufa, and Nimrod Talmon. Participatory budgeting: Data, tools, and analysis. arXiv
+preprint arXiv:2305.11035, 2023.
