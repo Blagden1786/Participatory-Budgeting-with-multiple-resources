@@ -5,7 +5,7 @@ from setup import *
 import numpy as np
 import random as rand
 
-def parse(path, num_resources=1, random_budget=False):
+def parse(path, num_resources=1):
 
     with open(path, 'r', newline='', encoding="utf-8") as csvfile:
         meta = {}

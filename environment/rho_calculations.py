@@ -1,5 +1,3 @@
-from itertools import count
-from math import inf
 import numpy as np
 
 import pabutools.election as pbe
@@ -50,7 +48,7 @@ def rho_affordable(c:Mproject, voters:list[int], voter_budgets, aggregation) -> 
         # Calculate the combined value of rho using the given aggregation function.
         # If one of the values is infinity, that means the project cannot be funded along that dimension.
         # Hence the aggregated rho value should be infinity
-        aggregated_rho = inf
+        aggregated_rho = np.inf
         if max(rho) < np.inf:
             aggregated_rho = aggregation(rho)
 
