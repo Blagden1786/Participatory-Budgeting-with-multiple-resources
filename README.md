@@ -3,7 +3,7 @@
 Author: George Blagden
 
 
-Links to the Data from PabuLib (Data correct as of 24/02/2025):\n
+Links to the Data from PabuLib (Data correct as of 24/02/2025):\\
 Small instances (Below 30 projects): https://pabulib.org/?hash=67839fdfa933a
 All approval instances: https://pabulib.org/?hash=67bc428000c8e
 
