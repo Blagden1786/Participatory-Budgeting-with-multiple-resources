@@ -32,18 +32,19 @@ Running an experiment
 - Set the seed in the "if \_\_name\_\_ == 'name':" code block. Default is 0 and all tests have been run using this.
 
 In main.py, in the function batch_run add an experiment to run:
-- run_test_projects(test_name, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
-- run_test_resources(test_name, max_resource:int, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
-- run_test_aggregation(test_name, functions:list, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
-
+```
+run_test_projects(test_name, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
+run_test_resources(test_name, max_resource:int, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
+run_test_aggregation(test_name, functions:list, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
+```
 The first argument (test_name) should be the name of the test. These are:
-- runtime_test - Runtime
-- exclusion_test - Exclusion Ratio
-- ejrplus_conversion_test - EJR+ Conversion
-- ejrpc_one_test - EJR+ Conversion up to one
-- elrplus_alldim_test - EJR+ All Dimensions
-- ejrpa_one_test - EJR+ All Dimensions up to one
-- False - The default test (Only for run_test_aggregation)
+- ```runtime_test``` - Runtime
+- ```exclusion_test``` - Exclusion Ratio
+- ```ejrplus_conversion_test``` - EJR+ Conversion
+- ```ejrpc_one_test``` - EJR+ Conversion up to one
+- ```elrplus_alldim_test``` - EJR+ All Dimensions
+- ```ejrpa_one_test``` - EJR+ All Dimensions up to one
+- ```False``` - The default test (Only for run_test_aggregation)
 
 data_location is the location of the folder where the data is stored.  
 output_folder is the location of the folder where the graph should be saved to.  
