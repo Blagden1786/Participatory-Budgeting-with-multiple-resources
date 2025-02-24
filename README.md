@@ -4,8 +4,8 @@ Author: George Blagden
 
 
 Links to the Data from PabuLib (Data correct as of 24/02/2025):  
--Small instances (Below 30 projects): https://pabulib.org/?hash=67839fdfa933a
--All approval instances: https://pabulib.org/?hash=67bc428000c8e
+- Small instances (Below 30 projects): https://pabulib.org/?hash=67839fdfa933a
+- All approval instances: https://pabulib.org/?hash=67bc428000c8e
 
 Requirements:  
 - Python 3.10 or later
@@ -21,20 +21,20 @@ Some tests - for some reason (memory leak in python 3.12 or linux?) - don't work
 
 
 Files:
--main.py - Location for running the code.
--setup.py - Classes for the election. M_____ is the multi-resource version of the class provided in the pabutools library.
--parser.py - Parser to convert the elections into (Minstance, Profile) pairs. (Edited form of the parser provided here https://pabulib.org/code)
--rules.py - The different voting rules (rho-calculations.py contains additional subroutines).
--analysis.py - Useful functions for analysing the results.
--experiments.py - The tests and experiments that can be run.
+- main.py - Location for running the code.
+- setup.py - Classes for the election. M_____ is the multi-resource version of the class provided in the pabutools library.
+- parser.py - Parser to convert the elections into (Minstance, Profile) pairs. (Edited form of the parser provided here https://pabulib.org/code)
+- rules.py - The different voting rules (rho-calculations.py contains additional subroutines).
+- analysis.py - Useful functions for analysing the results.
+- experiments.py - The tests and experiments that can be run.
 
 Running an experiment
--Set the seed in the "if __name__ == 'name':" code block. Default is 0 and all tests have been run using this.
+- Set the seed in the "if __name__ == 'name':" code block. Default is 0 and all tests have been run using this.
 
 In main.py, in the function batch_run add an experiment to run:
--run_test_projects(test_name, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
--run_test_resources(test_name, max_resource:int, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
--run_test_aggregation(test_name, functions:list, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
+- run_test_projects(test_name, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
+- run_test_resources(test_name, max_resource:int, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
+- run_test_aggregation(test_name, functions:list, data_location:str, output_folder:str, running_print:bool=False, show_graph:bool = False)
 
 The first argument (test_name) should be the name of the test. These are:
 -runtime_test - Runtime
