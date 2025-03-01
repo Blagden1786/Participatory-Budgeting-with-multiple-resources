@@ -27,8 +27,9 @@ def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    run_test_aggregation(False, [max, min, np.mean, np.median], './environment/datasets_under_30', './environment/plots', True, True)
-    #run_test_resources(runtime_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    #run_test_aggregation(False, [max, min, np.mean, np.median], './environment/datasets_under_30', './environment/plots', True, True)
+    run_test_projects(budget_test, './environment/datasets_extended', './environment/plots_batch')
+    run_test_resources(budget_test, 10, './environment/datasets_extended', './environment/plots_batch')
     #run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     #run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     #run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)

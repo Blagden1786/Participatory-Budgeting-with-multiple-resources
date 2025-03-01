@@ -79,6 +79,28 @@ def exclusion_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> flo
 
     return ratio
 
+def budget_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> float:
+    """Calculates the average proportion of the budget used in each dimension
+
+    Args:
+        instance (Minstance)
+        profile (pbe.ApprovalProfile)
+        rule (_type_): The voting rule to use (greedy_rule, multi_method_equal_shares, exchange_rates_2d)
+
+    Returns:
+        float: Exclusion Ratio
+    """
+    # Generate winner
+    outcome = rule(instance.copy(), profile.copy())
+    outcome_cost = [p.cost for p in outcome]
+
+    if len(outcome_cost)==0:
+        return 0
+    else:
+        outcome_cost = sum(outcome_cost)
+        converted_cost = sum([outcome_cost[i]*instance.budget_limit[0]/instance.budget_limit[i] for i in range(len(outcome_cost))])
+        return converted_cost/(instance.budget_limit[0]*instance.budget_limit.size)
+
 def ejrplus_conversion_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, up_to_one:bool=False) -> float:
     """Calculate the number of EJR+ violations up to one project or not
 
@@ -238,6 +260,8 @@ def test_metadata(test, test_type:str) -> tuple[str,str,str]:
             return ('Time (s)', 'Time for different rules to run', f'runtime_{test_type}')
         case 'exclusion_test':
             return ('Exclusion Ratio', 'Exclusion ratio for different rules', f'exclusion_{test_type}')
+        case 'budget_test':
+            return ('Budget Used', 'Proportion of the budget used in the outcome', f'budget_{test_type}')
         case 'ejrplus_conversion_test':
             return ('Number of Violations', 'EJR+ conversion violations', f'ejrc_{test_type}')
         case 'ejrpc_one_test':
