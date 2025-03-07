@@ -30,7 +30,7 @@ def run_election():
     instance = Minstance(projects, b)
     print(instance)
 
-    print("Place and x next to the supported projects, then state the number who have that approval\nType n when starting a new ballot to stop making new ones. ")
+    print("Place an x next to the supported projects, then state the number who have that approval\nType n when starting a new ballot to stop making new ones. ")
     ballots = []
     while True:
         if input("New ballot? (y/n) ") == 'n':
