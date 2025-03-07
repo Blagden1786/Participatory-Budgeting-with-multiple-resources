@@ -9,6 +9,8 @@ import pabutools.rules as pbr
 from setup import *
 from rho_calculations import *
 
+import warnings
+warnings.filterwarnings('ignore')
 
 """
 Cannot use ApprovalProfile.is_trivial() since requires the cost to be an integer not a list
