@@ -126,7 +126,7 @@ def cejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, up_to_one:b
     return failures
 
 def k_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, k="All", up_to_one:bool=True) -> float:
-    """Calculate the number of EJR+ violations up to one project or not
+    """Calculate the number of k-EJR+ violations for k=1 or k=r
 
     Args:
         instance (Minstance)
@@ -140,7 +140,8 @@ def k_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, k="All", u
     """
     # Generate outcome
     outcome = rule(instance.copy(), profile.copy())
-    violations = set()
+    indiv_violations = []
+
     # Find the EJR+ failures for each resource
     for i in range(instance.budget_limit.size):
         # Convert instance, profile and outcome to 1D equivalent (by restricting to one resource)
@@ -151,27 +152,24 @@ def k_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, k="All", u
         _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
 
         # Add violations to the set of all violations
-        if k=="All":
-            violations.update(failures)
-        else:
-            violations.intersection_update(failures)
+        indiv_violations.append(failures.copy())
 
-        del converted_inst
-        del converted_profile
-        del converted_outcome
-        del failures
-        gc.collect()
 
-    # The number of EJR+ violations is the total number which cause a violation in >= one dimension
+    if k == "All":
+        # The number of EJR+ violations is the total number which cause a violation in >= one dimension
+        violations = set.union(*indiv_violations)
+    else:
+        violations = set.intersection(*indiv_violations)
+
     num = len(violations)
-    del violations
+    del indiv_violations
     gc.collect()
     return num
 
 def all_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule):
-    return k_ejr_test(instance,profile,rule, "All",True)
+    return k_ejr_test(instance, profile, rule, "All",True)
 def one_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule):
-    return k_ejr_test(instance,profile, rule, "One",True)
+    return k_ejr_test(instance, profile, rule, k="One",up_to_one=True)
 ## Graphs
 '''
 Graph Building Functions
@@ -411,6 +409,10 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
     graph_values = {'Greedy Rule': dict([(k, np.mean(g[k])) for k in g.keys()]),
                     'Multi-MES': dict([(k, np.mean(mes[k])) for k in mes.keys()]),}
     test_meta = test_metadata(test_name, 'resources')
+
+    output_file = open('outcomes.txt','a')
+    output_file.write(f"{test_meta[1]}: {graph_values}\n")
+    output_file.close()
 
     graph_builder(graph_values, 'Number of Resources', test_meta[0], test_meta[1], test_meta[2], output_folder)
     if show_graph:

@@ -114,7 +114,7 @@ def strong_ejr_plus_violations(instance, profile, outcome, sat_class, up_to_one)
             violation = strong_ejr_plus_violation(proj_utils, vot_utils, outcome, c, threshold, up_to_one)
             if violation:
                 failures += 1
-                failures_set.add(c)
+                failures_set.add(c.name)
     return failures, failures_set
 
 # Other functions
