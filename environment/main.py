@@ -22,17 +22,21 @@ Cannot use ApprovalProfile.is_trivial() since requires the cost to be an integer
 - Different number of resources
 - Different epsilon for exchange rates
 - Different aggregation functions for MES
+
+Test Calls
+    run_test_projects(TEST_NAME, './environment/datasets', './environment/plots', True, False)
+    run_test_resources(TEST_NAME, 10, './environment/datasets', './environment/plots', True, False)
 """
 def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    #run_test_aggregation(False, [max, min, np.mean, np.median], './environment/datasets_under_30', './environment/plots', True, True)
-    run_test_projects(budget_test, './environment/datasets_extended', './environment/plots_batch', True, True)
-    run_test_resources(budget_test, 10, './environment/datasets_extended', './environment/plots_batch')
-    #run_test_resources(exclusion_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    #run_test_resources(ejrpc_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
-    #run_test_resources(ejrpa_one_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    run_test_projects(one_ejr_test, './environment/datasets_under_30', './environment/plots', True, True)
+    #run_test_projects(all_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_projects(one_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_resources(cejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_resources(all_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_resources(one_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
     t2 = time()
 
     def to_hours(x):

@@ -101,7 +101,7 @@ def budget_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> float:
         converted_cost = sum([outcome_cost[i]*instance.budget_limit[0]/instance.budget_limit[i] for i in range(len(outcome_cost))])
         return converted_cost/(instance.budget_limit[0]*instance.budget_limit.size)
 
-def ejrplus_conversion_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, up_to_one:bool=False) -> float:
+def cejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, up_to_one:bool=True) -> float:
     """Calculate the number of EJR+ violations up to one project or not
 
     Args:
@@ -124,26 +124,15 @@ def ejrplus_conversion_test(instance:Minstance, profile:pbe.ApprovalProfile, rul
     failures, _ = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
 
     return failures
-def ejrpc_one_test(instance:Minstance, profile:pbe.ApprovalProfile, rule):
-    """ Calculate EJR+ conversion up to one project
 
-    Args:
-        instance (Minstance)
-        profile (pbe.ApprovalProfile)
-        rule (_type_): The voting rule to use (greedy_rule, multi_method_equal_shares, exchange_rates_2d)
-
-    Returns:
-        float: The number of violations
-"""
-    return ejrplus_conversion_test(instance,profile,rule,True)
-
-def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, up_to_one:bool=False) -> float:
+def k_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, k="All", up_to_one:bool=True) -> float:
     """Calculate the number of EJR+ violations up to one project or not
 
     Args:
         instance (Minstance)
         profile (pbe.ApprovalProfile)
         rule (_type_): The voting rule to use (greedy_rule, multi_method_equal_shares, exchange_rates_2d)
+        k (str): Whether to run 1-EJR+ or All-EJR+. Input "All" of "One"
         up_to_one (bool, optional): Whether to find violations up to one project or up to any. Defaults to True.
 
     Returns:
@@ -162,7 +151,10 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
         _, failures = strong_ejr_plus_violations(converted_inst, converted_profile, converted_outcome, pbe.Cost_Sat, up_to_one)
 
         # Add violations to the set of all violations
-        violations.update(failures)
+        if k=="All":
+            violations.update(failures)
+        else:
+            violations.intersection_update(failures)
 
         del converted_inst
         del converted_profile
@@ -175,19 +167,11 @@ def ejrplus_alldim_test(instance:Minstance, profile:pbe.ApprovalProfile, rule, u
     del violations
     gc.collect()
     return num
-def ejrpa_one_test(instance:Minstance, profile:pbe.ApprovalProfile, rule) -> float:
-    """ Calculate EJR+ all dim violations up to one project
 
-    Args:
-        instance (Minstance)
-        profile (pbe.ApprovalProfile)
-        rule (_type_): The voting rule to use (greedy_rule, multi_method_equal_shares, exchange_rates_2d)
-
-    Returns:
-        float: The number of violations
-"""
-    return ejrplus_alldim_test(instance,profile,rule,True)
-
+def all_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule):
+    return k_ejr_test(instance,profile,rule, "All",True)
+def one_ejr_test(instance:Minstance, profile:pbe.ApprovalProfile, rule):
+    return k_ejr_test(instance,profile, rule, "One",True)
 ## Graphs
 '''
 Graph Building Functions
@@ -262,14 +246,12 @@ def test_metadata(test, test_type:str) -> tuple[str,str,str]:
             return ('Exclusion Ratio', 'Exclusion ratio for different rules', f'exclusion_{test_type}')
         case 'budget_test':
             return ('Budget Used', 'Proportion of the budget used in the outcome', f'budget_{test_type}')
-        case 'ejrplus_conversion_test':
-            return ('Number of Violations', 'EJR+ conversion violations', f'ejrc_{test_type}')
-        case 'ejrpc_one_test':
-            return ('Number of Violations', 'EJR+ conversion violations up to one project', f'ejrco_{test_type}')
-        case 'ejrplus_alldim_test':
-            return ('Number of Violations', 'EJR+ (all dimensions) violations', f'ejra_{test_type}')
-        case 'ejrpa_one_test':
-            return ('Number of Violations', 'EJR+ (all dimensions) violations up to one project', f'ejrao_{test_type}')
+        case 'cejr_test':
+            return ('Number of Violations', 'CEJR+ violations', f'cejr_{test_type}')
+        case 'all_ejr_test':
+            return ('Number of Violations', 'All-EJR+ violations', f'allejr_{test_type}')
+        case 'one_ejr_test':
+            return ('Number of Violations', '1-EJR+ violations', f'oneejr_{test_type}')
         case _:
             return ('','','None')
 
@@ -354,6 +336,9 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
                     'Exchange Rates': dict([(k, np.mean(er[k])) for k in er.keys()])}
     test_meta = test_metadata(test_name, 'projects')
 
+    output_file = open('outcomes.txt','a')
+    output_file.write(f"{test_meta[1]}: {graph_values}\n")
+    output_file.close()
     graph_builder(graph_values, 'Number of Projects', test_meta[0], test_meta[1], test_meta[2], output_folder)
     if show_graph:
         plt.show()
