@@ -36,7 +36,7 @@ def batch_run(seed):
     run_test_projects(cejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
     run_test_resources(cejr_test, 10, './environment/datasets_extended', './environment/plots_batch', True, False)
     run_test_resources(all_ejr_test, 10, './environment/datasets_extended', './environment/plots_batch', True, False)
-    run_test_resources(one_ejr_test,10, './environment/datasets_under_30', './environment/plots_batch', True, False)
+    run_test_resources(one_ejr_test,10, './environment/datasets_extended', './environment/plots_batch', True, False)
     t2 = time()
 
     def to_hours(x):
