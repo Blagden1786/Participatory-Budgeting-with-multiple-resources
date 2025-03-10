@@ -31,12 +31,12 @@ def batch_run(seed):
     rand.seed(seed)
 
     t1 = time()
-    run_test_projects(one_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
-    run_test_projects(all_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
-    run_test_projects(cejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
-    run_test_resources(cejr_test, 10, './environment/datasets_extended', './environment/plots_batch', True, False)
-    run_test_resources(all_ejr_test, 10, './environment/datasets_extended', './environment/plots_batch', True, False)
-    run_test_resources(one_ejr_test,10, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_projects(one_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_projects(all_ejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_projects(cejr_test, './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_resources(cejr_test, 10, './environment/datasets_extended', './environment/plots_batch', True, False)
+    run_test_resources(all_ejr_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    run_test_resources(one_ejr_test,10, './environment/datasets_resources', './environment/plots_batch', True, False)
     t2 = time()
 
     def to_hours(x):
