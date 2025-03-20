@@ -391,11 +391,11 @@ def run_test_resources(test_name, max_resource:int, data_location:str, output_fo
 
             # Add the outcome of the test to the dictionary
             if running_print:
-                print("Greedy Rule", end='')
+                print("Greedy Rule")
             g[i].append(test_name(instance.copy(), profile.copy(), greedy_rule))
 
             if running_print:
-                print(" Done\nMulti-MES", end='')
+                print(" Done\nMulti-MES")
             mes[i].append(test_name(instance.copy(), profile.copy(), multi_method_equal_shares))
 
             if running_print:
@@ -489,21 +489,21 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
             outputs = dict([(x.__name__,[]) for x in functions])
             for f in functions:
                 if running_print:
-                    print(f"Multi-MES({f.__name__})", end='')
+                    print(f"Multi-MES({f.__name__})")
 
                 # Run the desired test on multi-mes with the aggregation function f
                 outputs[f.__name__].append(test_name(instance.copy(), profile.copy(), lambda i,p: multi_method_equal_shares(i,p,f,False)))
 
                 if running_print:
                     print(" Done")
-            del instance
-            del profile
-            gc.collect()
 
             mes = dict([(f.__name__,np.mean(outputs[f.__name__])) for f in functions])
 
-
     if test_name == False:
+        output_file = open('outcomes.txt','a')
+        output_file.write(f"Different Aggregation: {mes}\n")
+        output_file.close()
+
         # Create the bar graph
         plt.figure("Differences")
         plt.bar(mes.keys(), [x/num_paths for x in mes.values()])
@@ -513,6 +513,10 @@ def run_test_aggregation(test_name, functions:list, data_location:str, output_fo
         plt.savefig(f"{output_folder}/diff_aggregation.png")
     else:
         meta = test_metadata(test_name, "aggregation")
+
+        output_file = open('outcomes.txt','a')
+        output_file.write(f"{meta[1]}: {mes}\n")
+        output_file.close()
         # Create the bar graph
         plt.figure(meta[2])
         plt.bar(mes.keys(), mes.values())

@@ -37,6 +37,9 @@ def batch_run(seed):
     #run_test_resources(cejr_test, 10, './environment/datasets_extended', './environment/plots_batch', True, False)
     #run_test_resources(all_ejr_test, 10, './environment/datasets_resources', './environment/plots_batch', True, False)
     run_test_resources(one_ejr_test,10, './environment/datasets_resources', './environment/plots_batch', True, False)
+    #run_test_aggregation(exclusion_test, [max, min, np.median, np.mean], './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_aggregation(cejr_test, [max, min, np.median, np.mean], './environment/datasets_extended', './environment/plots_batch', True, False)
+    #run_test_aggregation(False, [max, min, np.median, np.mean], './environment/datasets_extended', './environment/plots_batch', True, True)
     t2 = time()
 
     def to_hours(x):
