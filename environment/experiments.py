@@ -304,6 +304,7 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
         if running_print:
             counter += 1
             print("-----------------------------------")
+            print(f"Test: {test_name.__name__}")
             print(path)
             print(f"Projects {projects}")
             print(f"Votes: {voters}")
@@ -312,15 +313,15 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
 
         # Add the outcome of the test to the dictionary
         if running_print:
-            print("Greedy Rule", end='')
+            print("Greedy Rule")
         g[project_num_split(projects)].append(test_name(instance.copy(), profile.copy(), greedy_rule))
 
         if running_print:
-            print(" Done\nMulti-MES", end='')
+            print(" Done\nMulti-MES")
         mes[project_num_split(projects)].append(test_name(instance.copy(), profile.copy(), multi_method_equal_shares))
 
         if running_print:
-            print(" Done\nExchange Rates", end='')
+            print(" Done\nExchange Rates")
         er[project_num_split(projects)].append(test_name(instance.copy(), profile.copy(), exchange_rates_2d))
         if running_print:
             print(" Done")
@@ -331,7 +332,7 @@ def run_test_projects(test_name, data_location:str, output_folder:str, running_p
     # Create the dict for the graph builder and then create the graph
     graph_values = {'Greedy Rule': dict([(k, np.mean(g[k])) for k in g.keys()]),
                     'Multi-MES': dict([(k, np.mean(mes[k])) for k in mes.keys()]),
-                    'Exchange Rates': dict([(k, np.mean(er[k])) for k in er.keys()])}
+                    'EES': dict([(k, np.mean(er[k])) for k in er.keys()])}
     test_meta = test_metadata(test_name, 'projects')
 
     output_file = open('outcomes.txt','a')
