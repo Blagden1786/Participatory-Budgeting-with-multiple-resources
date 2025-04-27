@@ -22,16 +22,20 @@ Modules
 Some tests - for some reason (memory leak in python 3.12 or linux?) - don't work on the Batch compute system on the DCS machines, please do not use it.
 
 Files:
+The files included here are .txt files as in accordance with the submission guidance on <https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs310/components/final/submission/>. When converting them to .py, make sure the file has the same name.
 
 - main.py - Location for running the code.
-- setup.py - Classes for the election. M\_\_\_\_\_ is the multi-resource version of the class provided in the pabutools library.
+- setup.py - Classes for the election. M_____ is the multi-resource version of the class provided in the pabutools library.
 - parser.py - Parser to convert the elections into ```(Minstance, Profile)``` pairs. (Edited form of the parser provided here <https://pabulib.org/code>)
-- rules.py - The different voting rules (rho-calculations.py contains additional subroutines).
+- rules.py - The different voting rules (rho-calculations.py contains additional subroutines). The code was written before EES was named, the name used in the code is 'exchange rates'.
 - analysis.py - Useful functions for analysing the results.
 - experiments.py - The tests and experiments that can be run.
+- system.py - A framework for creating an election and finding out the results of Greedy, multi-MES and EES.
+- outcomes.txt - A text file that stores the outcomes of the experiments that are run.
 
 Running an experiment
 
+- Download some elections from <https://pabulib.org/> and save them in a folder.
 - Set the seed in the ```if __name__ == 'name':``` code block. The seed was randomly generated as 53. The results in the paper use this. Depending on the tests run, results may differ.
 
 In main.py, in the function batch_run add an experiment to run:
@@ -46,10 +50,10 @@ The first argument (test_name) should be the name of the test. These are:
 
 - ```runtime_test``` - Runtime
 - ```exclusion_test``` - Exclusion Ratio
-- ```ejrplus_conversion_test``` - EJR+ Conversion
-- ```ejrpc_one_test``` - EJR+ Conversion up to one
-- ```elrplus_alldim_test``` - EJR+ All Dimensions
-- ```ejrpa_one_test``` - EJR+ All Dimensions up to one
+- ```budget_test``` - Budget usage
+- ```cejr_test``` - CEJR+
+- ```all_ejr_test``` - All-EJR+
+- ```one_ejr_test``` - 1-EJR+
 - ```False``` - The default test (Only for run_test_aggregation)
 
 ```data_location``` is the location of the folder where the data is stored.
